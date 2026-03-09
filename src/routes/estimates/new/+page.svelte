@@ -4,8 +4,7 @@
     import InvoiceForm from "$lib/components/InvoiceForm.svelte";
     import type { Estimate } from "$lib/models/estimate";
 
-    function handleSave(event: CustomEvent<any>) {
-        const estimateData = event.detail;
+    function handleSave(estimateData: any) {
         const id = addEstimate(estimateData);
         goto("/estimates");
     }
@@ -54,5 +53,5 @@
 </div>
 
 <div class="px-8 py-10 max-w-5xl mx-auto">
-    <InvoiceForm type="estimate" on:save={handleSave} />
+    <InvoiceForm type="estimate" onsave={handleSave} />
 </div>

@@ -1,21 +1,32 @@
 <script lang="ts">
+    import type { Snippet } from "svelte";
+
     type Column = {
         key: string;
         label: string;
         align?: "left" | "center" | "right";
     };
 
-    // Using any[] because we'll pass different data types (Invoice, Client, Item)
-    export let data: any[] = [];
-    export let columns: Column[] = [];
-    export let emptyMessage = "No records found.";
-
-    // Dispatch events for row clicks or actions
-    import { createEventDispatcher } from "svelte";
-    const dispatch = createEventDispatcher();
+    let {
+        data = [],
+        columns = [],
+        emptyMessage = "No records found.",
+        emptyStateAction,
+        row: rowSnippet,
+        onRowClick,
+    } = $props<{
+        data: any[];
+        columns: Column[];
+        emptyMessage?: string;
+        emptyStateAction?: Snippet;
+        row?: Snippet<[any, number]>;
+        onRowClick?: (item: any) => void;
+    }>();
 
     function handleRowClick(item: any) {
-        dispatch("rowClick", item);
+        if (onRowClick) {
+            onRowClick(item);
+        }
     }
 </script>
 
@@ -41,7 +52,7 @@
                 />
             </svg>
             <p class="text-sm font-medium">{emptyMessage}</p>
-            <slot name="emptyStateAction" />
+            {@render emptyStateAction?.()}
         </div>
     {:else}
         <div class="overflow-x-auto">
@@ -63,9 +74,19 @@
                     {#each data as row, i}
                         <tr
                             class="hover:bg-slate-50 focus-within:bg-slate-50 cursor-pointer transition-colors"
-                            on:click={() => handleRowClick(row)}
+                            onclick={() => handleRowClick(row)}
                         >
-                            <slot name="row" {row} index={i}></slot>
+                            {#if rowSnippet}
+                                {@render rowSnippet(row, i)}
+                            {:else}
+                                {#each columns as col}
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"
+                                    >
+                                        {row[col.key]}
+                                    </td>
+                                {/each}
+                            {/if}
                         </tr>
                     {/each}
                 </tbody>

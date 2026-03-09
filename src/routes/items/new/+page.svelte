@@ -4,16 +4,22 @@
     import AppButton from "$lib/components/AppButton.svelte";
 
     let name = "";
+    let sku = "";
+    let category = "";
     let description = "";
     let rate = 0;
+    let unit = "pcs";
 
     function handleSubmit() {
         if (!name) return;
 
         addItem({
             name,
+            sku,
+            category,
             description,
             rate,
+            unit,
         });
 
         goto("/items");
@@ -71,6 +77,37 @@
             />
         </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="space-y-1">
+                <label
+                    for="sku"
+                    class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1"
+                    >SKU / Item Code</label
+                >
+                <input
+                    id="sku"
+                    type="text"
+                    bind:value={sku}
+                    placeholder="e.g. GD-001"
+                    class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                />
+            </div>
+            <div class="space-y-1">
+                <label
+                    for="category"
+                    class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1"
+                    >Category</label
+                >
+                <input
+                    id="category"
+                    type="text"
+                    bind:value={category}
+                    placeholder="e.g. Services"
+                    class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                />
+            </div>
+        </div>
+
         <div class="space-y-1">
             <label
                 for="description"
@@ -80,30 +117,52 @@
             <textarea
                 id="description"
                 bind:value={description}
-                rows="3"
+                rows="2"
                 placeholder="Briefly describe the product or service"
                 class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm resize-none"
             ></textarea>
         </div>
 
-        <div class="space-y-1">
-            <label
-                for="rate"
-                class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1"
-                >Default Rate</label
-            >
-            <div class="relative">
-                <span
-                    class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
-                    >$</span
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="space-y-1">
+                <label
+                    for="rate"
+                    class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1"
+                    >Default Rate</label
                 >
-                <input
-                    id="rate"
-                    type="number"
-                    step="0.01"
-                    bind:value={rate}
-                    class="block w-full pl-7 border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
-                />
+                <div class="relative">
+                    <span
+                        class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                        >$</span
+                    >
+                    <input
+                        id="rate"
+                        type="number"
+                        step="0.01"
+                        bind:value={rate}
+                        class="block w-full pl-7 border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                    />
+                </div>
+            </div>
+            <div class="space-y-1">
+                <label
+                    for="unit"
+                    class="block text-xs font-bold uppercase tracking-widest text-slate-500 mb-1"
+                    >Unit</label
+                >
+                <select
+                    id="unit"
+                    bind:value={unit}
+                    class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                >
+                    <option value="pcs">pcs (Pieces)</option>
+                    <option value="hrs">hrs (Hours)</option>
+                    <option value="days">days (Days)</option>
+                    <option value="kg">kg (Kilograms)</option>
+                    <option value="unit">unit</option>
+                    <option value="m">m (Meters)</option>
+                    <option value="job">job</option>
+                </select>
             </div>
         </div>
 

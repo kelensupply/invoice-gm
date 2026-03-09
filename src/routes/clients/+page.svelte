@@ -4,15 +4,17 @@
     import AppButton from "$lib/components/AppButton.svelte";
     import ConfirmDialog from "$lib/components/ConfirmDialog.svelte";
     import type { Client } from "$lib/models/client";
+    import { goto } from "$app/navigation";
 
-    let dialogOpen = false;
-    let clientToDelete: Client | null = null;
+    let dialogOpen = $state(false);
+    let clientToDelete: Client | null = $state(null);
 
     const columns = [
         { key: "companyName", label: "Company" },
         { key: "contactName", label: "Contact" },
         { key: "email", label: "Email" },
         { key: "phone", label: "Phone" },
+        { key: "actions", label: "", align: "right" as const },
     ];
 
     function confirmDelete(client: any) {
@@ -26,13 +28,19 @@
         }
     }
 
-    $: tableData = $clients.map((client) => ({
-        raw: client,
-        companyName: client.companyName,
-        contactName: client.contactName,
-        email: client.email,
-        phone: client.phone,
-    }));
+    let tableData = $derived(
+        $clients.map((client) => ({
+            raw: client,
+            companyName: client.companyName,
+            contactName: client.contactName,
+            email: client.email,
+            phone: client.phone,
+        })),
+    );
+
+    function handleRowClick(item: any) {
+        goto(`/clients/${item.raw.id}`);
+    }
 </script>
 
 <svelte:head>
@@ -68,9 +76,10 @@
     <DataTable
         {columns}
         data={tableData}
+        onRowClick={handleRowClick}
         emptyMessage="You haven't added any clients yet."
     >
-        <svelte:fragment slot="emptyStateAction">
+        {#snippet emptyStateAction()}
             <AppButton
                 href="/clients/new"
                 variant="primary"
@@ -79,52 +88,42 @@
             >
                 Add your first client
             </AppButton>
-        </svelte:fragment>
+        {/snippet}
 
-        <svelte:fragment slot="row" let:row>
+        {#snippet row(rowData)}
             <td
                 class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900"
             >
-                {row.companyName}
+                {rowData.companyName}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"
-                >{row.contactName}</td
-            >
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500"
-                >{row.email}</td
-            >
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500"
-                >{row.phone}</td
-            >
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                {rowData.contactName}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                {rowData.email}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                {rowData.phone}
+            </td>
 
-            <!-- Actions hidden by default, shown on row hover -->
             <td
                 class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
             >
-                <div
-                    class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity"
-                >
-                    <button
-                        class="text-slate-400 hover:text-emerald-600 p-1"
-                        title="Edit"
+                <div class="flex justify-end gap-2">
+                    <AppButton
+                        variant="outline"
+                        size="sm"
+                        href={`/clients/${rowData.raw.id}`}
+                        onclick={(e: MouseEvent) => e.stopPropagation()}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-4 h-4"
-                            ><path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                            /></svg
-                        >
-                    </button>
+                        Edit
+                    </AppButton>
                     <button
-                        class="text-slate-400 hover:text-red-600 p-1"
-                        on:click|stopPropagation={() => confirmDelete(row)}
+                        class="text-slate-400 hover:text-red-600 p-2 rounded-lg hover:bg-red-50 transition-colors"
+                        onclick={(e: MouseEvent) => {
+                            e.stopPropagation();
+                            confirmDelete(rowData);
+                        }}
                         title="Delete"
                     >
                         <svg
@@ -143,7 +142,7 @@
                     </button>
                 </div>
             </td>
-        </svelte:fragment>
+        {/snippet}
     </DataTable>
 </div>
 

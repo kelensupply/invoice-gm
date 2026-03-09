@@ -5,8 +5,9 @@
     import AppButton from "$lib/components/AppButton.svelte";
     import { formatCurrency, formatDate } from "$lib/utils/formatters";
     import type { InvoiceStatus } from "$lib/models/invoice";
+    import { goto } from "$app/navigation";
 
-    let currentFilter: InvoiceStatus | "all" = "all";
+    let currentFilter: InvoiceStatus | "all" = $state("all");
 
     const filterTabs = [
         { value: "all", label: "All Invoices" },
@@ -17,13 +18,13 @@
         { value: "overdue", label: "Overdue" },
     ];
 
-    // Helper to calculate invoice total
     function calculateTotal(invoice: any) {
         const subtotal = invoice.items.reduce(
             (sum: number, item: any) => sum + item.rate * item.quantity,
             0,
         );
-        return subtotal + invoice.shipping - invoice.discount;
+        const taxAmount = subtotal * (invoice.taxRate / 100);
+        return subtotal + taxAmount + invoice.shipping - invoice.discount;
     }
 
     const columns = [
@@ -32,21 +33,29 @@
         { key: "status", label: "Status" },
         { key: "amount", label: "Amount", align: "right" as const },
         { key: "dateIssued", label: "Date", align: "right" as const },
+        { key: "actions", label: "", align: "right" as const },
     ];
 
-    // Filter and map invoices for the data table
-    $: filteredInvoices = $invoices.filter(
-        (inv) => currentFilter === "all" || inv.status === currentFilter,
+    let filteredInvoices = $derived(
+        $invoices.filter(
+            (inv) => currentFilter === "all" || inv.status === currentFilter,
+        ),
     );
 
-    $: tableData = filteredInvoices.map((inv) => ({
-        raw: inv,
-        invoiceNumber: inv.invoiceNumber,
-        client: inv.client.companyName,
-        status: inv.status,
-        amount: formatCurrency(calculateTotal(inv), inv.currency),
-        dateIssued: formatDate(inv.dateIssued),
-    }));
+    let tableData = $derived(
+        filteredInvoices.map((inv) => ({
+            raw: inv,
+            invoiceNumber: inv.invoiceNumber,
+            client: inv.client.companyName,
+            status: inv.status,
+            amount: formatCurrency(calculateTotal(inv), inv.currency),
+            dateIssued: formatDate(inv.dateIssued),
+        })),
+    );
+
+    function handleRowClick(item: any) {
+        goto(`/invoices/${item.raw.id}/preview`);
+    }
 </script>
 
 <svelte:head>
@@ -54,7 +63,6 @@
 </svelte:head>
 
 <div class="p-8 max-w-7xl mx-auto">
-    <!-- Header -->
     <div
         class="flex items-center justify-between mb-8 flex-col sm:flex-row gap-4"
     >
@@ -80,18 +88,17 @@
         </AppButton>
     </div>
 
-    <!-- Filter Tabs -->
     <div class="mb-6 overflow-x-auto">
         <div class="border-b border-slate-200">
             <nav class="-mb-px flex space-x-8 min-w-max" aria-label="Tabs">
                 {#each filterTabs as tab}
                     <button
-                        on:click={() =>
+                        onclick={() =>
                             (currentFilter = tab.value as
                                 | InvoiceStatus
                                 | "all")}
                         class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors focus:outline-none
-              {currentFilter === tab.value
+                        {currentFilter === tab.value
                             ? 'border-emerald-500 text-emerald-600'
                             : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}"
                     >
@@ -122,13 +129,13 @@
         </div>
     </div>
 
-    <!-- Data Table -->
     <DataTable
         {columns}
         data={tableData}
+        onRowClick={handleRowClick}
         emptyMessage={`No ${currentFilter === "all" ? "" : currentFilter + " "}invoices found.`}
     >
-        <svelte:fragment slot="emptyStateAction">
+        {#snippet emptyStateAction()}
             <AppButton
                 href="/invoices/new"
                 variant="primary"
@@ -137,30 +144,50 @@
             >
                 Create your first invoice
             </AppButton>
-        </svelte:fragment>
+        {/snippet}
 
-        <svelte:fragment slot="row" let:row>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a
-                    href={`/invoices/${row.raw.id}/preview`}
-                    class="text-blue-500 hover:text-blue-700 hover:underline"
-                    >{row.invoiceNumber}</a
-                >
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"
-                >{row.client}</td
+        {#snippet row(rowData)}
+            <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900"
             >
+                {rowData.invoiceNumber}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                <div class="font-medium text-slate-900">{rowData.client}</div>
+            </td>
             <td class="px-6 py-4 whitespace-nowrap">
-                <StatusBadge status={row.status} />
+                <StatusBadge status={rowData.status} />
             </td>
             <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900 text-right"
-                >{row.amount}</td
+                class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900 text-right"
             >
+                {rowData.amount}
+            </td>
             <td
                 class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 text-right"
-                >{row.dateIssued}</td
             >
-        </svelte:fragment>
+                {rowData.dateIssued}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                <div class="flex justify-end gap-2">
+                    <AppButton
+                        variant="ghost"
+                        size="sm"
+                        href={`/invoices/${rowData.raw.id}/preview`}
+                        onclick={(e: MouseEvent) => e.stopPropagation()}
+                    >
+                        View
+                    </AppButton>
+                    <AppButton
+                        variant="outline"
+                        size="sm"
+                        href={`/invoices/${rowData.raw.id}`}
+                        onclick={(e: MouseEvent) => e.stopPropagation()}
+                    >
+                        Edit
+                    </AppButton>
+                </div>
+            </td>
+        {/snippet}
     </DataTable>
 </div>

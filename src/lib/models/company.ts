@@ -5,5 +5,6 @@ export interface CompanyInfo {
     address: string;
     website: string;
     taxId: string;
+    domain: string;
     logo?: string;
 }

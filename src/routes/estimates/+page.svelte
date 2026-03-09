@@ -5,8 +5,9 @@
     import AppButton from "$lib/components/AppButton.svelte";
     import { formatCurrency, formatDate } from "$lib/utils/formatters";
     import type { EstimateStatus } from "$lib/models/estimate";
+    import { goto } from "$app/navigation";
 
-    let currentFilter: EstimateStatus | "all" = "all";
+    let currentFilter: EstimateStatus | "all" = $state("all");
 
     const filterTabs = [
         { value: "all", label: "All Estimates" },
@@ -18,7 +19,6 @@
         { value: "expired", label: "Expired" },
     ];
 
-    // Helper to calculate estimate total
     function calculateTotal(estimate: any) {
         const subtotal = estimate.items.reduce(
             (sum: number, item: any) => sum + item.rate * item.quantity,
@@ -34,21 +34,29 @@
         { key: "status", label: "Status" },
         { key: "amount", label: "Amount", align: "right" as const },
         { key: "dateIssued", label: "Date", align: "right" as const },
+        { key: "actions", label: "", align: "right" as const },
     ];
 
-    // Filter and map estimates for the data table
-    $: filteredEstimates = $estimates.filter(
-        (est) => currentFilter === "all" || est.status === currentFilter,
+    let filteredEstimates = $derived(
+        $estimates.filter(
+            (est) => currentFilter === "all" || est.status === currentFilter,
+        ),
     );
 
-    $: tableData = filteredEstimates.map((est) => ({
-        raw: est,
-        estimateNumber: est.estimateNumber,
-        client: est.client.companyName,
-        status: est.status,
-        amount: formatCurrency(calculateTotal(est), est.currency),
-        dateIssued: formatDate(est.dateIssued),
-    }));
+    let tableData = $derived(
+        filteredEstimates.map((est) => ({
+            raw: est,
+            estimateNumber: est.estimateNumber,
+            client: est.client.companyName,
+            status: est.status,
+            amount: formatCurrency(calculateTotal(est), est.currency),
+            dateIssued: formatDate(est.dateIssued),
+        })),
+    );
+
+    function handleRowClick(item: any) {
+        goto(`/estimates/${item.raw.id}/preview`);
+    }
 </script>
 
 <svelte:head>
@@ -56,7 +64,6 @@
 </svelte:head>
 
 <div class="p-8 max-w-7xl mx-auto">
-    <!-- Header -->
     <div
         class="flex items-center justify-between mb-8 flex-col sm:flex-row gap-4"
     >
@@ -82,18 +89,17 @@
         </AppButton>
     </div>
 
-    <!-- Filter Tabs -->
     <div class="mb-6 overflow-x-auto">
         <div class="border-b border-slate-200">
             <nav class="-mb-px flex space-x-8 min-w-max" aria-label="Tabs">
                 {#each filterTabs as tab}
                     <button
-                        on:click={() =>
+                        onclick={() =>
                             (currentFilter = tab.value as
                                 | EstimateStatus
                                 | "all")}
                         class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors focus:outline-none
-              {currentFilter === tab.value
+                        {currentFilter === tab.value
                             ? 'border-emerald-500 text-emerald-600'
                             : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'}"
                     >
@@ -124,13 +130,13 @@
         </div>
     </div>
 
-    <!-- Data Table -->
     <DataTable
         {columns}
         data={tableData}
+        onRowClick={handleRowClick}
         emptyMessage={`No ${currentFilter === "all" ? "" : currentFilter + " "}estimates found.`}
     >
-        <svelte:fragment slot="emptyStateAction">
+        {#snippet emptyStateAction()}
             <AppButton
                 href="/estimates/new"
                 variant="primary"
@@ -139,30 +145,50 @@
             >
                 Create your first estimate
             </AppButton>
-        </svelte:fragment>
+        {/snippet}
 
-        <svelte:fragment slot="row" let:row>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <a
-                    href={`/estimates/${row.raw.id}/preview`}
-                    class="text-blue-500 hover:text-blue-700 hover:underline"
-                    >{row.estimateNumber}</a
-                >
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600"
-                >{row.client}</td
+        {#snippet row(rowData)}
+            <td
+                class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900"
             >
+                {rowData.estimateNumber}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-600">
+                <div class="font-medium text-slate-900">{rowData.client}</div>
+            </td>
             <td class="px-6 py-4 whitespace-nowrap">
-                <StatusBadge status={row.status} />
+                <StatusBadge status={rowData.status} />
             </td>
             <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900 text-right"
-                >{row.amount}</td
+                class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900 text-right"
             >
+                {rowData.amount}
+            </td>
             <td
                 class="px-6 py-4 whitespace-nowrap text-sm text-slate-500 text-right"
-                >{row.dateIssued}</td
             >
-        </svelte:fragment>
+                {rowData.dateIssued}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+                <div class="flex justify-end gap-2">
+                    <AppButton
+                        variant="ghost"
+                        size="sm"
+                        href={`/estimates/${rowData.raw.id}/preview`}
+                        onclick={(e: MouseEvent) => e.stopPropagation()}
+                    >
+                        View
+                    </AppButton>
+                    <AppButton
+                        variant="outline"
+                        size="sm"
+                        href={`/estimates/${rowData.raw.id}`}
+                        onclick={(e: MouseEvent) => e.stopPropagation()}
+                    >
+                        Edit
+                    </AppButton>
+                </div>
+            </td>
+        {/snippet}
     </DataTable>
 </div>

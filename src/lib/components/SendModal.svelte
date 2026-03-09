@@ -4,9 +4,12 @@
     import { fade, scale } from "svelte/transition";
 
     export let open = false;
-    export let title = "Send Document";
+    export let title = "";
     export let type: "invoice" | "estimate" = "invoice";
     export let initialClientName = "";
+
+    $: modalTitle =
+        title || `Send ${type.charAt(0).toUpperCase() + type.slice(1)}`;
     export let initialClientEmail = "";
 
     const dispatch = createEventDispatcher();
@@ -59,7 +62,7 @@
             <div
                 class="p-6 border-b border-slate-100 flex items-center justify-between"
             >
-                <h3 class="text-xl font-bold text-slate-800">{title}</h3>
+                <h3 class="text-xl font-bold text-slate-800">{modalTitle}</h3>
                 <button
                     on:click={close}
                     class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-50 transition-colors"

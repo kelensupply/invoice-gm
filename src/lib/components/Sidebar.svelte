@@ -1,11 +1,14 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import { enhance } from "$app/forms";
     import { slide } from "svelte/transition";
+
+    let { session } = $props<{ session?: any }>();
 
     const menuItems = [
         {
             name: "Dashboard",
-            path: "/",
+            path: "/dashboard",
             icon: "m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25",
         },
         {
@@ -78,10 +81,14 @@
         },
     ];
 
-    let expandedMenus = new Set<string>();
+    let expandedMenus = $state(new Set<string>());
+    let initialized = $state(false);
 
-    // Initialize expanded menus based on current path
-    $: {
+    // Auto-expand active sub-menus only on first render
+    $effect(() => {
+        if (initialized) return;
+
+        const newExpanded = new Set<string>();
         menuItems.forEach((item) => {
             if (item.subItems) {
                 const isActive = item.subItems.some(
@@ -90,20 +97,23 @@
                         $page.url.pathname.startsWith(sub.path + "/"),
                 );
                 if (isActive) {
-                    expandedMenus.add(item.name);
-                    expandedMenus = expandedMenus; // trigger reactivity
+                    newExpanded.add(item.name);
                 }
             }
         });
-    }
+
+        expandedMenus = newExpanded;
+        initialized = true;
+    });
 
     function toggleMenu(name: string) {
-        if (expandedMenus.has(name)) {
-            expandedMenus.delete(name);
+        const newExpanded = new Set(expandedMenus);
+        if (newExpanded.has(name)) {
+            newExpanded.delete(name);
         } else {
-            expandedMenus.add(name);
+            newExpanded.add(name);
         }
-        expandedMenus = expandedMenus;
+        expandedMenus = newExpanded;
     }
 </script>
 
@@ -141,7 +151,7 @@
             {@const isItemActive = item.path
                 ? $page.url.pathname === item.path ||
                   ($page.url.pathname.startsWith(item.path + "/") &&
-                      item.path !== "/")
+                      item.path !== "/dashboard")
                 : false}
             {@const isSubActive =
                 item.subItems?.some((sub) => $page.url.pathname === sub.path) ||
@@ -152,7 +162,7 @@
                 {@const isExpanded = expandedMenus.has(item.name)}
                 <div class="px-2 mb-1">
                     <button
-                        on:click={() => toggleMenu(item.name)}
+                        onclick={() => toggleMenu(item.name)}
                         class="w-full flex items-center justify-between px-4 py-3 rounded-md transition-all {isActive
                             ? 'text-white bg-slate-700/30'
                             : 'text-slate-400 hover:text-white hover:bg-slate-700/50'}"
@@ -273,14 +283,40 @@
             <div
                 class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs font-medium"
             >
-                U
+                {session?.user?.email?.charAt(0).toUpperCase() || "U"}
             </div>
             <div class="flex-1 overflow-hidden">
                 <p class="text-sm font-medium text-white truncate">
                     User Account
                 </p>
-                <p class="text-xs text-slate-500 truncate">demo@example.com</p>
+                <p class="text-xs text-slate-500 truncate">
+                    {session?.user?.email || "Guest"}
+                </p>
             </div>
+            {#if session}
+                <form method="POST" action="/logout">
+                    <button
+                        type="submit"
+                        class="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-700 transition-colors"
+                        title="Logout"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-5 h-5"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"
+                            />
+                        </svg>
+                    </button>
+                </form>
+            {/if}
         </div>
     </div>
 </aside>

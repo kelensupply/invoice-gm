@@ -69,7 +69,7 @@
         data={tableData}
         emptyMessage="You haven't added any items yet."
     >
-        <svelte:fragment slot="emptyStateAction">
+        {#snippet emptyStateAction()}
             <AppButton
                 href="/items/new"
                 variant="primary"
@@ -78,9 +78,9 @@
             >
                 Add your first item
             </AppButton>
-        </svelte:fragment>
+        {/snippet}
 
-        <svelte:fragment slot="row" let:row>
+        {#snippet row(row)}
             <td
                 class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900"
             >
@@ -121,7 +121,10 @@
                     </button>
                     <button
                         class="text-slate-400 hover:text-red-600 p-1"
-                        on:click|stopPropagation={() => confirmDelete(row)}
+                        onclick={(e: MouseEvent) => {
+                            e.stopPropagation();
+                            confirmDelete(row);
+                        }}
                         title="Delete"
                     >
                         <svg
@@ -140,7 +143,7 @@
                     </button>
                 </div>
             </td>
-        </svelte:fragment>
+        {/snippet}
     </DataTable>
 </div>
 

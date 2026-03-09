@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { settings } from "$lib/stores/settings";
+    import { settings, updateSettings } from "$lib/stores/settings";
     import AppButton from "$lib/components/AppButton.svelte";
+    import { CURRENCIES } from "$lib/constants/currencies";
 
     let activeTab = "company";
 
@@ -8,8 +9,7 @@
     let editedSettings = JSON.parse(JSON.stringify($settings));
 
     function handleSave() {
-        $settings = JSON.parse(JSON.stringify(editedSettings));
-        // Could add a toast notification here
+        updateSettings(editedSettings);
         alert("Settings saved successfully!");
     }
 </script>
@@ -23,7 +23,7 @@
         <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
             Settings
         </h1>
-        <AppButton variant="primary" on:click={handleSave}>
+        <AppButton variant="primary" onclick={handleSave}>
             Save Changes
         </AppButton>
     </div>
@@ -35,7 +35,7 @@
         >
             <nav class="flex flex-col" aria-label="Tabs">
                 <button
-                    on:click={() => (activeTab = "company")}
+                    onclick={() => (activeTab = "company")}
                     class="flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-2 transition-colors {activeTab ===
                     'company'
                         ? 'bg-slate-50 border-emerald-500 text-emerald-700'
@@ -57,7 +57,7 @@
                     Company Profile
                 </button>
                 <button
-                    on:click={() => (activeTab = "defaults")}
+                    onclick={() => (activeTab = "defaults")}
                     class="flex items-center gap-3 px-4 py-3 text-sm font-medium border-l-2 transition-colors {activeTab ===
                     'defaults'
                         ? 'bg-slate-50 border-emerald-500 text-emerald-700'
@@ -111,6 +111,21 @@
                                     type="text"
                                     bind:value={editedSettings.company.name}
                                     class="block w-full rounded-md border-0 py-1.5 px-3 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-emerald-500 sm:text-sm font-semibold"
+                                />
+                            </div>
+
+                            <div class="col-span-1 sm:col-span-2">
+                                <label
+                                    for="fDomain"
+                                    class="block text-sm font-medium leading-6 text-slate-900 mb-1"
+                                    >Domain (Concern)</label
+                                >
+                                <input
+                                    id="fDomain"
+                                    type="text"
+                                    bind:value={editedSettings.company.domain}
+                                    placeholder="e.g. Health Tech, Construction, etc."
+                                    class="block w-full rounded-md border-0 py-1.5 px-3 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-emerald-500 sm:text-sm"
                                 />
                             </div>
 
@@ -219,17 +234,11 @@
                                     bind:value={editedSettings.defaultCurrency}
                                     class="block w-full rounded-md border-0 py-2 px-3 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-emerald-500 sm:text-sm"
                                 >
-                                    <option value="USD">USD - US Dollar</option>
-                                    <option value="EUR">EUR - Euro</option>
-                                    <option value="GBP"
-                                        >GBP - British Pound</option
-                                    >
-                                    <option value="CAD"
-                                        >CAD - Canadian Dollar</option
-                                    >
-                                    <option value="AUD"
-                                        >AUD - Australian Dollar</option
-                                    >
+                                    {#each CURRENCIES as c}
+                                        <option value={c.code}
+                                            >{c.code} - {c.name}</option
+                                        >
+                                    {/each}
                                 </select>
                             </div>
 

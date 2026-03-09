@@ -1,9 +1,5 @@
 import { writable } from 'svelte/store';
 import type { CompanyInfo } from '../models/company';
-import { browser } from '$app/environment';
-
-const STORE_KEY = 'invoicer_settings';
-const storedSettings = browser ? localStorage.getItem(STORE_KEY) : null;
 
 export interface AppSettings {
     company: CompanyInfo;
@@ -20,7 +16,8 @@ const defaultSettings: AppSettings = {
         phone: '',
         address: '',
         website: '',
-        taxId: ''
+        taxId: '',
+        domain: ''
     },
     defaultTaxRate: 0,
     defaultCurrency: 'USD',
@@ -28,10 +25,63 @@ const defaultSettings: AppSettings = {
     defaultTerms: 'Payment due upon receipt.'
 };
 
-export const settings = writable<AppSettings>(storedSettings ? JSON.parse(storedSettings) : defaultSettings);
+export const settings = writable<AppSettings>(defaultSettings);
 
-if (browser) {
-    settings.subscribe((value: AppSettings) => {
-        localStorage.setItem(STORE_KEY, JSON.stringify(value));
+let supabaseClient: any;
+let userId: string;
+
+export const initSettings = async (supabase: any, uid: string) => {
+    supabaseClient = supabase;
+    userId = uid;
+
+    const { data, error } = await supabaseClient
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
+    if (!error && data) {
+        settings.update(s => ({
+            ...s,
+            company: {
+                name: data.name || '',
+                email: data.email || '',
+                phone: data.phone || '',
+                address: data.address || '',
+                website: data.website || '',
+                taxId: data.tax_id || '',
+                domain: data.domain || '',
+                logo: data.logo || undefined
+            }
+        }));
+    } else if (error && error.code === 'PGRST116') {
+        // Not found is handled by maybeSingle returning null, but just in case
+        console.log("No profile found.");
+    }
+};
+
+export const updateSettings = (updates: Partial<AppSettings>) => {
+    settings.update(s => {
+        const newSettings = { ...s, ...updates };
+
+        // Update DB if company info changed
+        if (updates.company && supabaseClient && userId) {
+            const dbProfile = {
+                id: userId,
+                name: updates.company.name,
+                email: updates.company.email,
+                phone: updates.company.phone,
+                address: updates.company.address,
+                website: updates.company.website,
+                tax_id: updates.company.taxId,
+                domain: updates.company.domain,
+                logo: updates.company.logo
+            };
+
+            // Upsert profile
+            supabaseClient.from('profiles').upsert(dbProfile).then();
+        }
+
+        return newSettings;
     });
-}
+};

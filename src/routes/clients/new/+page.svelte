@@ -7,7 +7,10 @@
     let contactName = "";
     let email = "";
     let phone = "";
+    let website = "";
+    let taxId = "";
     let address = "";
+    let notes = "";
 
     function handleSubmit() {
         if (!companyName) return;
@@ -17,7 +20,10 @@
             contactName,
             email,
             phone,
+            website,
+            taxId,
             address,
+            notes,
         });
 
         goto("/clients");
@@ -75,7 +81,7 @@
             />
         </div>
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div class="space-y-1">
                 <label
                     for="contactName"
@@ -92,15 +98,15 @@
             </div>
             <div class="space-y-1">
                 <label
-                    for="email"
+                    for="taxId"
                     class="block text-xs font-bold uppercase tracking-widest text-slate-400"
-                    >Email Address</label
+                    >Tax ID / Business No.</label
                 >
                 <input
-                    id="email"
-                    type="email"
-                    bind:value={email}
-                    placeholder="john@example.com"
+                    id="taxId"
+                    type="text"
+                    bind:value={taxId}
+                    placeholder="Optional"
                     class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
                 />
             </div>
@@ -108,17 +114,48 @@
 
         <div class="space-y-1">
             <label
-                for="phone"
+                for="email"
                 class="block text-xs font-bold uppercase tracking-widest text-slate-400"
-                >Phone Number</label
+                >Email Address</label
             >
             <input
-                id="phone"
-                type="text"
-                bind:value={phone}
-                placeholder="555-0199"
+                id="email"
+                type="email"
+                bind:value={email}
+                placeholder="john@example.com"
                 class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
             />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="space-y-1">
+                <label
+                    for="phone"
+                    class="block text-xs font-bold uppercase tracking-widest text-slate-400"
+                    >Phone Number</label
+                >
+                <input
+                    id="phone"
+                    type="text"
+                    bind:value={phone}
+                    placeholder="555-0199"
+                    class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                />
+            </div>
+            <div class="space-y-1">
+                <label
+                    for="website"
+                    class="block text-xs font-bold uppercase tracking-widest text-slate-400"
+                    >Website</label
+                >
+                <input
+                    id="website"
+                    type="url"
+                    bind:value={website}
+                    placeholder="https://example.com"
+                    class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm"
+                />
+            </div>
         </div>
 
         <div class="space-y-1">
@@ -130,8 +167,23 @@
             <textarea
                 id="address"
                 bind:value={address}
-                rows="3"
+                rows="2"
                 placeholder="123 Street Name, City, State, ZIP"
+                class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm resize-none"
+            ></textarea>
+        </div>
+
+        <div class="space-y-1">
+            <label
+                for="notes"
+                class="block text-xs font-bold uppercase tracking-widest text-slate-400"
+                >Internal Notes</label
+            >
+            <textarea
+                id="notes"
+                bind:value={notes}
+                rows="2"
+                placeholder="Key accounts, special requirements, etc."
                 class="block w-full border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500 text-sm resize-none"
             ></textarea>
         </div>
