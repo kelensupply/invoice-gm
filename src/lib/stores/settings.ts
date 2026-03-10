@@ -52,7 +52,11 @@ export const initSettings = async (supabase: any, uid: string) => {
                 taxId: data.tax_id || '',
                 domain: data.domain || '',
                 logo: data.logo || undefined
-            }
+            },
+            defaultTaxRate: data.default_tax_rate ?? s.defaultTaxRate,
+            defaultCurrency: data.default_currency ?? s.defaultCurrency,
+            defaultNotes: data.default_notes ?? s.defaultNotes,
+            defaultTerms: data.default_terms ?? s.defaultTerms
         }));
     } else if (error && error.code === 'PGRST116') {
         // Not found is handled by maybeSingle returning null, but just in case
@@ -65,18 +69,27 @@ export const updateSettings = (updates: Partial<AppSettings>) => {
         const newSettings = { ...s, ...updates };
 
         // Update DB if company info changed
-        if (updates.company && supabaseClient && userId) {
-            const dbProfile = {
+        if (supabaseClient && userId) {
+            const dbProfile: any = {
                 id: userId,
-                name: updates.company.name,
-                email: updates.company.email,
-                phone: updates.company.phone,
-                address: updates.company.address,
-                website: updates.company.website,
-                tax_id: updates.company.taxId,
-                domain: updates.company.domain,
-                logo: updates.company.logo
             };
+
+            if (newSettings.company) {
+                dbProfile.name = newSettings.company.name;
+                dbProfile.email = newSettings.company.email;
+                dbProfile.phone = newSettings.company.phone;
+                dbProfile.address = newSettings.company.address;
+                dbProfile.website = newSettings.company.website;
+                dbProfile.tax_id = newSettings.company.taxId;
+                dbProfile.domain = newSettings.company.domain;
+                dbProfile.logo = newSettings.company.logo;
+            }
+
+            if (newSettings.defaultTaxRate !== undefined) dbProfile.default_tax_rate = newSettings.defaultTaxRate;
+            if (newSettings.defaultCurrency !== undefined) dbProfile.default_currency = newSettings.defaultCurrency;
+            if (newSettings.defaultNotes !== undefined) dbProfile.default_notes = newSettings.defaultNotes;
+            if (newSettings.defaultTerms !== undefined) dbProfile.default_terms = newSettings.defaultTerms;
+
 
             // Upsert profile
             supabaseClient.from('profiles').upsert(dbProfile).then();
