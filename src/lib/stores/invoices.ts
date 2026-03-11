@@ -64,7 +64,11 @@ export const addInvoice = (invoice: Omit<Invoice, 'id'>) => {
             currency: invoice.currency,
             notes: invoice.notes,
             terms: invoice.terms
-        }]).then();
+        }]).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to save invoice to Supabase:', error);
+            }
+        });
     }
 
     return id;
@@ -90,7 +94,11 @@ export const updateInvoice = (id: string, updates: Partial<Invoice>) => {
         if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
         if (updates.terms !== undefined) dbUpdates.terms = updates.terms;
 
-        supabaseClient.from('invoices').update(dbUpdates).eq('id', id).then();
+        supabaseClient.from('invoices').update(dbUpdates).eq('id', id).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to update invoice in Supabase:', error);
+            }
+        });
     }
 };
 
@@ -98,6 +106,10 @@ export const deleteInvoice = (id: string) => {
     invoices.update(i => i.filter(inv => inv.id !== id));
 
     if (supabaseClient) {
-        supabaseClient.from('invoices').delete().eq('id', id).then();
+        supabaseClient.from('invoices').delete().eq('id', id).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to delete invoice in Supabase:', error);
+            }
+        });
     }
 };

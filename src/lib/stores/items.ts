@@ -57,7 +57,12 @@ export const addItem = (item: Omit<Item, 'id'>) => {
             sku: item.sku,
             category: item.category,
             unit: item.unit
-        }]).then();
+        }]).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to save item to Supabase:', error);
+                // We could revert the optimistic update here if needed
+            }
+        });
     }
 };
 
@@ -73,7 +78,11 @@ export const updateItem = (id: string, updates: Partial<Item>) => {
         if (updates.category !== undefined) dbUpdates.category = updates.category;
         if (updates.unit !== undefined) dbUpdates.unit = updates.unit;
 
-        supabaseClient.from('items').update(dbUpdates).eq('id', id).then();
+        supabaseClient.from('items').update(dbUpdates).eq('id', id).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to update item in Supabase:', error);
+            }
+        });
     }
 };
 
@@ -81,6 +90,10 @@ export const deleteItem = (id: string) => {
     items.update(i => i.filter(item => item.id !== id));
 
     if (supabaseClient) {
-        supabaseClient.from('items').delete().eq('id', id).then();
+        supabaseClient.from('items').delete().eq('id', id).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to delete item in Supabase:', error);
+            }
+        });
     }
 };

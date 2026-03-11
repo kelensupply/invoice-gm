@@ -64,7 +64,11 @@ export const addEstimate = (estimate: Omit<Estimate, 'id'>) => {
             currency: estimate.currency,
             notes: estimate.notes,
             terms: estimate.terms
-        }]).then();
+        }]).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to save estimate to Supabase:', error);
+            }
+        });
     }
 
     return id;
@@ -90,7 +94,11 @@ export const updateEstimate = (id: string, updates: Partial<Estimate>) => {
         if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
         if (updates.terms !== undefined) dbUpdates.terms = updates.terms;
 
-        supabaseClient.from('estimates').update(dbUpdates).eq('id', id).then();
+        supabaseClient.from('estimates').update(dbUpdates).eq('id', id).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to update estimate in Supabase:', error);
+            }
+        });
     }
 };
 
@@ -98,6 +106,10 @@ export const deleteEstimate = (id: string) => {
     estimates.update(e => e.filter(est => est.id !== id));
 
     if (supabaseClient) {
-        supabaseClient.from('estimates').delete().eq('id', id).then();
+        supabaseClient.from('estimates').delete().eq('id', id).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to delete estimate in Supabase:', error);
+            }
+        });
     }
 };

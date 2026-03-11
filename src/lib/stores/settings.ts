@@ -92,7 +92,11 @@ export const updateSettings = (updates: Partial<AppSettings>) => {
 
 
             // Upsert profile
-            supabaseClient.from('profiles').upsert(dbProfile).then();
+            supabaseClient.from('profiles').upsert(dbProfile).then(({ error }: any) => {
+                if (error) {
+                    console.error('Failed to update profile settings in Supabase:', error);
+                }
+            });
         }
 
         return newSettings;

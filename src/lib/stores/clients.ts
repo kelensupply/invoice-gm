@@ -52,7 +52,11 @@ export const addClient = (client: Omit<Client, 'id'>) => {
             website: client.website,
             tax_id: client.taxId,
             notes: client.notes
-        }]).then();
+        }]).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to save client to Supabase:', error);
+            }
+        });
     }
 };
 
@@ -70,7 +74,11 @@ export const updateClient = (id: string, updates: Partial<Client>) => {
         if (updates.taxId !== undefined) dbUpdates.tax_id = updates.taxId;
         if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
 
-        supabaseClient.from('clients').update(dbUpdates).eq('id', id).then();
+        supabaseClient.from('clients').update(dbUpdates).eq('id', id).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to update client in Supabase:', error);
+            }
+        });
     }
 };
 
@@ -78,6 +86,10 @@ export const deleteClient = (id: string) => {
     clients.update(c => c.filter(client => client.id !== id));
 
     if (supabaseClient) {
-        supabaseClient.from('clients').delete().eq('id', id).then();
+        supabaseClient.from('clients').delete().eq('id', id).then(({ error }: any) => {
+            if (error) {
+                console.error('Failed to delete client in Supabase:', error);
+            }
+        });
     }
 };
