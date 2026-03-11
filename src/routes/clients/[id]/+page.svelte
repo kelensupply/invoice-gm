@@ -83,12 +83,11 @@
 </script>
 
 <svelte:head>
-    <title>Edit Client - Invoicer App</title>
+    <title>Edit Client - InvoiceMe App</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto">
-        <!-- Header -->
+    <div class="max-w-3xl mx-auto">        <!-- Header -->
         <div class="flex items-center gap-4 mb-8">
             <a
                 href="/clients"

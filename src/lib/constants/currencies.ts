@@ -25,3 +25,8 @@ export const CURRENCIES: Currency[] = [
     { code: "SGD", symbol: "S$", name: "Singapore Dollar" },
     { code: "NZD", symbol: "NZ$", name: "New Zealand Dollar" },
 ];
+
+export function getCurrencySymbol(code: string): string {
+    const currency = CURRENCIES.find(c => c.code === code);
+    return currency ? currency.symbol : '$';
+}

@@ -630,13 +630,13 @@
             Line Items
         </h3>
         <div
-            class="hidden md:grid grid-cols-12 gap-3 pb-4 text-xs font-semibold text-slate-500 uppercase tracking-wider border-b-2 border-slate-200"
+            class="hidden md:grid grid-cols-12 gap-4 pb-4 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider border-b-2 border-slate-200"
         >
             <div class="col-span-1"></div>
-            <div class="col-span-5">Item</div>
+            <div class="col-span-6">Item</div>
             <div class="col-span-2 text-right">Rate</div>
             <div class="col-span-1 text-center">Qty</div>
-            <div class="col-span-2 text-right">Line Total</div>
+            <div class="col-span-1 text-right">Line Total</div>
             <div class="col-span-1"></div>
         </div>
 

@@ -1,4 +1,4 @@
-import { createBrowserClient, isBrowser, parse } from '@supabase/ssr'
+import { createBrowserClient, createServerClient, isBrowser } from '@supabase/ssr'
 import type { LayoutLoad } from './$types'
 
 export const load: LayoutLoad = async ({ data, depends, fetch }) => {
@@ -6,14 +6,10 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
 
     const supabase = isBrowser()
         ? createBrowserClient(data.url, data.anonKey, {
-            global: {
-                fetch,
-            },
+            global: { fetch },
         })
         : createServerClient(data.url, data.anonKey, {
-            global: {
-                fetch,
-            },
+            global: { fetch },
             cookies: {
                 getAll() {
                     return data.cookies
@@ -22,14 +18,4 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
         })
 
     return { ...data, supabase }
-}
-
-function createServerClient(url: string, key: string, options: any) {
-    return {
-        auth: {
-            getSession: async () => ({ data: { session: null } }),
-            getUser: async () => ({ data: { user: null } }),
-            onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => { } } } })
-        }
-    } as any
 }

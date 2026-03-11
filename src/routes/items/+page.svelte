@@ -1,16 +1,20 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { items, deleteItem } from "$lib/stores/items";
+    import { getCategoryLabel } from "$lib/constants/categories";
+    import { settings } from "$lib/stores/settings";
+    import { formatCurrency } from "$lib/utils/formatters";
     import DataTable from "$lib/components/DataTable.svelte";
     import AppButton from "$lib/components/AppButton.svelte";
     import ConfirmDialog from "$lib/components/ConfirmDialog.svelte";
-    import { formatCurrency } from "$lib/utils/formatters";
     import type { Item } from "$lib/stores/items";
 
     let dialogOpen = false;
     let itemToDelete: Item | null = null;
 
     const columns = [
-        { key: "name", label: "Name" },
+        { key: "name", label: "Item Name" },
+        { key: "category", label: "Category" },
         { key: "description", label: "Description" },
         { key: "rate", label: "Default Rate", align: "right" as const },
     ];
@@ -26,11 +30,16 @@
         }
     }
 
+    function handleItemClick(itemId: string) {
+        goto(`/items/${itemId}`);
+    }
+
     $: tableData = $items.map((item) => ({
         raw: item,
         name: item.name,
+        category: getCategoryLabel(item.category),
         description: item.description,
-        rate: formatCurrency(item.rate),
+        rate: formatCurrency(item.rate, $settings.defaultCurrency),
     }));
 </script>
 
@@ -38,31 +47,39 @@
     <title>Items - Invoicer App</title>
 </svelte:head>
 
-<div class="p-8 max-w-7xl mx-auto">
-    <div
-        class="flex items-center justify-between mb-8 flex-col sm:flex-row gap-4"
-    >
-        <h1 class="text-2xl font-bold text-slate-900 tracking-tight">
-            Items Library
-        </h1>
-        <AppButton href="/items/new" variant="primary">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                class="w-4 h-4 mr-2"
-            >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 4.5v15m7.5-7.5h-15"
-                />
-            </svg>
-            Add Item
-        </AppButton>
-    </div>
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-slate-50 to-slate-100">
+    <div class="p-8 max-w-7xl mx-auto">
+        <!-- Header Section -->
+        <div
+            class="flex items-center justify-between mb-8 flex-col sm:flex-row gap-4"
+        >
+            <div>
+                <h1 class="text-4xl font-bold text-slate-900 tracking-tight">
+                    Items Library
+                </h1>
+                <p class="text-slate-500 text-sm mt-2">Manage your products and services</p>
+            </div>
+            <AppButton href="/items/new" variant="primary">
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="w-4 h-4 mr-2"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                </svg>
+                Add Item
+            </AppButton>
+        </div>
+
+        <!-- Data Table Card -->
+        <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
 
     <DataTable
         {columns}
@@ -82,16 +99,28 @@
 
         {#snippet row(row)}
             <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900"
+                class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900 cursor-pointer hover:text-emerald-600 transition-colors"
+                onclick={() => handleItemClick(row.raw.id)}
             >
                 {row.name}
             </td>
-            <td class="px-6 py-4 text-sm text-slate-600 max-w-md truncate"
-                >{row.description}</td
+            <td 
+                class="px-6 py-4 whitespace-nowrap cursor-pointer hover:opacity-80 transition-opacity"
+                onclick={() => handleItemClick(row.raw.id)}
+            >
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                    {row.category}
+                </span>
+            </td>
+            <td 
+                class="px-6 py-4 text-sm text-slate-600 max-w-md truncate cursor-pointer hover:text-slate-900 transition-colors"
+                onclick={() => handleItemClick(row.raw.id)}
+            >{row.description}</td
             >
             <td
-                class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900 text-right"
-                >{row.rate}</td
+                class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-slate-900 text-right cursor-pointer hover:text-emerald-600 transition-colors"
+                onclick={() => handleItemClick(row.raw.id)}
+            >{row.rate}</td
             >
 
             <!-- Actions hidden by default, shown on row hover -->
@@ -103,6 +132,10 @@
                 >
                     <button
                         class="text-slate-400 hover:text-emerald-600 p-1"
+                        onclick={(e: MouseEvent) => {
+                            e.stopPropagation();
+                            handleItemClick(row.raw.id);
+                        }}
                         title="Edit"
                     >
                         <svg
@@ -145,6 +178,8 @@
             </td>
         {/snippet}
     </DataTable>
+        </div>
+    </div>
 </div>
 
 <ConfirmDialog

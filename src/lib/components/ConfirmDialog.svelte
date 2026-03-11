@@ -28,7 +28,7 @@
         <div
             class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity"
             aria-hidden="true"
-            on:click={handleCancel}
+            onclick={handleCancel}
         ></div>
 
         <!-- Modal panel -->
@@ -100,7 +100,7 @@
                         <div class="sm:ml-3">
                             <AppButton
                                 variant={destructive ? "danger" : "primary"}
-                                on:click={handleConfirm}
+                                onclick={handleConfirm}
                             >
                                 {confirmText}
                             </AppButton>
@@ -108,7 +108,7 @@
                         <div class="mt-3 sm:mt-0">
                             <AppButton
                                 variant="secondary"
-                                on:click={handleCancel}
+                                onclick={handleCancel}
                             >
                                 {cancelText}
                             </AppButton>
