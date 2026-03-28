@@ -138,9 +138,13 @@
 
     // UI state
     let activeClientTab: "billed" | "shipped" = $state("billed");
-    let showShipping = $derived(shipping > 0);
-    let showDiscount = $derived(discount > 0);
-    let showTax = $derived(taxRate > 0 || $taxRates.length > 0);
+    let showShippingField = $state(false);
+    let showDiscountField = $state(false);
+    let showTaxField = $state(false);
+
+    let showShipping = $derived(showShippingField || shipping > 0);
+    let showDiscount = $derived(showDiscountField || discount > 0);
+    let showTax = $derived(showTaxField || taxRate > 0 || $taxRates.length > 0);
 
     // Computed
     let subtotal = $derived(
@@ -868,21 +872,21 @@
                     {#if !showShipping}
                         <button
                             class="text-xs font-semibold text-slate-500 hover:text-emerald-600 bg-white border border-slate-200 hover:border-emerald-300 rounded-lg px-2.5 py-1 transition-all"
-                            onclick={() => (showShipping = true)}
+                            onclick={() => (showShippingField = true)}
                             >+ Shipping</button
                         >
                     {/if}
                     {#if !showDiscount}
                         <button
                             class="text-xs font-semibold text-slate-500 hover:text-emerald-600 bg-white border border-slate-200 hover:border-emerald-300 rounded-lg px-2.5 py-1 transition-all"
-                            onclick={() => (showDiscount = true)}
+                            onclick={() => (showDiscountField = true)}
                             >+ Discount</button
                         >
                     {/if}
                     {#if !showTax}
                         <button
                             class="text-xs font-semibold text-slate-500 hover:text-emerald-600 bg-white border border-slate-200 hover:border-emerald-300 rounded-lg px-2.5 py-1 transition-all"
-                            onclick={() => (showTax = true)}>+ Tax</button
+                            onclick={() => (showTaxField = true)}>+ Tax</button
                         >
                     {/if}
                 </div>

@@ -35,7 +35,7 @@
     }
 
     // Get columns to show on mobile
-    const visibleColumns = columns.filter((col) => !col.hideOnMobile);
+    const visibleColumns = columns.filter((col: Column) => !col.hideOnMobile);
 </script>
 
 <div class="section-card">

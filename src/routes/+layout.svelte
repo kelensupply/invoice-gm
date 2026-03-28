@@ -48,9 +48,16 @@
 					initHistory(supabase, currentUserId),
 					initTaxRates(supabase, currentUserId),
 					initExpenses(supabase, currentUserId),
-				]).then(() => {
-					isDataLoaded = true;
-				});
+				])
+					.then(() => {
+						console.log("Workspace data loaded successfully");
+						isDataLoaded = true;
+					})
+					.catch((err) => {
+						console.error("Failed to load workspace data:", err);
+						// Still set loaded to true so the app remains usable even if some data is missing
+						isDataLoaded = true;
+					});
 			} else {
 				// Clear all stores explicitly on logout so data doesn't leak between sessions
 				import("$lib/stores/clients").then((m) => m.clients.set([]));
