@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     import { formatCurrency, formatDate } from "$lib/utils/formatters";
     import { getCurrencySymbol } from "$lib/constants/currencies";
 
@@ -21,6 +22,17 @@
     function handlePrint() {
         window.print();
     }
+
+    onMount(() => {
+        // State machine hook: Mark as viewed when public link is opened
+        if (type === "invoice" && doc.status === "sent") {
+            fetch(`/api/invoices/${doc.id}/view`, {
+                method: "POST",
+            }).catch((e) =>
+                console.error("Failed to mark invoice as viewed", e),
+            );
+        }
+    });
 </script>
 
 <svelte:head>

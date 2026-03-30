@@ -82,7 +82,7 @@
     function handlePaymentRecorded() {
         // Automatically check if invoice is fully paid and prompt status update
         if (invoiceId && balanceDue <= 0 && invoice?.status !== "paid") {
-            updateInvoice(invoiceId, { status: "paid" });
+            updateInvoice(invoiceId, { status: "paid", paidAt: new Date() });
         }
     }
 </script>
@@ -504,6 +504,14 @@
                 bind:isOpen={isShareModalOpen}
                 {shareUrl}
                 documentNumber={invoice.invoiceNumber}
+                onshare={() => {
+                    if (invoice && invoice.status !== "paid") {
+                        updateInvoice(invoice.id, {
+                            status: "sent",
+                            sentAt: new Date(),
+                        });
+                    }
+                }}
             />
         {/if}
     {/if}

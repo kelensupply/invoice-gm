@@ -1,7 +1,12 @@
 <script lang="ts">
     import AppButton from "./AppButton.svelte";
 
-    let { isOpen = $bindable(false), shareUrl, documentNumber } = $props();
+    let {
+        isOpen = $bindable(false),
+        shareUrl,
+        documentNumber,
+        onshare,
+    } = $props();
 
     let copyLabel = $state("Copy Link");
 
@@ -12,6 +17,7 @@
     }
 
     function shareWhatsApp() {
+        if (onshare) onshare("whatsapp");
         const text = encodeURIComponent(
             `Hi, here is the document ${documentNumber}: ${shareUrl}`,
         );
@@ -19,6 +25,7 @@
     }
 
     function shareEmail() {
+        if (onshare) onshare("email");
         const subject = encodeURIComponent(`Document ${documentNumber}`);
         const body = encodeURIComponent(
             `Hi, you can view your document here: ${shareUrl}`,

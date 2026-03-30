@@ -33,15 +33,35 @@ export const initInvoices = async (supabase: any, uid: string) => {
             shipping: inv.shipping,
             currency: inv.currency,
             notes: inv.notes,
-            terms: inv.terms
+            terms: inv.terms,
+            sentAt: inv.sent_at ? new Date(inv.sent_at) : undefined,
+            viewedAt: inv.viewed_at ? new Date(inv.viewed_at) : undefined,
+            paidAt: inv.paid_at ? new Date(inv.paid_at) : undefined
         }));
-        invoices.set(mapped);
+
+        // Dynamically compute overdue status
+        const now = new Date();
+        now.setHours(0, 0, 0, 0); // only compare dates
+
+        const updatedMapped = mapped.map((inv: any) => {
+            if (inv.status !== 'paid' && inv.dateDue < now && inv.status !== 'overdue') {
+                // If it's not paid and past due, mark as overdue
+                if (supabaseClient && userId) {
+                    supabaseClient.from('invoices').update({ status: 'overdue' }).eq('id', inv.id).then();
+                }
+                return { ...inv, status: 'overdue' };
+            }
+            return inv;
+        });
+
+        invoices.set(updatedMapped);
     }
 };
 
 export const addInvoice = (invoice: Omit<Invoice, 'id'>) => {
     const id = uuidv4();
-    const newInvoice = { ...invoice, id };
+    // Default correctly to draft on creation
+    const newInvoice = { ...invoice, id, status: 'draft' as const };
 
     // Optimistic UI update
     invoices.update(i => [...i, newInvoice]);
@@ -60,18 +80,21 @@ export const addInvoice = (invoice: Omit<Invoice, 'id'>) => {
             user_id: userId,
             invoice_number: invoice.invoiceNumber,
             po_number: invoice.poNumber,
-            date_issued: invoice.dateIssued.toISOString(),
-            date_due: invoice.dateDue.toISOString(),
-            status: invoice.status,
-            sender: invoice.sender,
+            date_issued: newInvoice.dateIssued.toISOString(),
+            date_due: newInvoice.dateDue.toISOString(),
+            status: newInvoice.status,
+            sender: newInvoice.sender,
             client: invoice.client,
             items: invoice.items,
             tax_rate: invoice.taxRate,
             discount: invoice.discount,
-            shipping: invoice.shipping,
-            currency: invoice.currency,
-            notes: invoice.notes,
-            terms: invoice.terms
+            shipping: newInvoice.shipping,
+            currency: newInvoice.currency,
+            notes: newInvoice.notes,
+            terms: newInvoice.terms,
+            sent_at: newInvoice.sentAt?.toISOString(),
+            viewed_at: newInvoice.viewedAt?.toISOString(),
+            paid_at: newInvoice.paidAt?.toISOString()
         }]).then(({ error }: any) => {
             if (error) {
                 console.error('Failed to save invoice to Supabase:', error);
@@ -110,6 +133,9 @@ export const updateInvoice = (id: string, updates: Partial<Invoice>) => {
         if (updates.currency !== undefined) dbUpdates.currency = updates.currency;
         if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
         if (updates.terms !== undefined) dbUpdates.terms = updates.terms;
+        if (updates.sentAt !== undefined) dbUpdates.sent_at = updates.sentAt.toISOString();
+        if (updates.viewedAt !== undefined) dbUpdates.viewed_at = updates.viewedAt.toISOString();
+        if (updates.paidAt !== undefined) dbUpdates.paid_at = updates.paidAt.toISOString();
 
         supabaseClient.from('invoices').update(dbUpdates).eq('id', id).then(({ error }: any) => {
             if (error) {

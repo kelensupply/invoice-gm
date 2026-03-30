@@ -168,58 +168,7 @@
             {rowData.client}
         </td>
         <td class="px-5 py-4 whitespace-nowrap">
-            <!-- svelte-ignore a11y_click_events_have_key_events -->
-            <!-- svelte-ignore a11y_no_static_element_interactions -->
-            <div
-                class="relative inline-block"
-                onclick={(e) => e.stopPropagation()}
-            >
-                <select
-                    value={rowData.status}
-                    onchange={(e) =>
-                        updateInvoice(rowData.raw.id, {
-                            status: (e.target as HTMLSelectElement)
-                                .value as any,
-                        })}
-                    class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border-2 outline-none appearance-none cursor-pointer pr-6
-                    {rowData.status === 'paid'
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 focus:border-emerald-400'
-                        : rowData.status === 'overdue'
-                          ? 'bg-red-50 text-red-700 border-red-200 focus:border-red-400'
-                          : rowData.status === 'draft'
-                            ? 'bg-slate-50 text-slate-600 border-slate-200 focus:border-slate-400'
-                            : 'bg-blue-50 text-blue-700 border-blue-200 focus:border-blue-400'}"
-                >
-                    <option value="draft">Draft</option>
-                    <option value="sent">Sent</option>
-                    <option value="viewed">Viewed</option>
-                    <option value="paid">Paid</option>
-                    <option value="overdue">Overdue</option>
-                </select>
-                <div
-                    class="pointer-events-none absolute inset-y-0 right-1.5 flex items-center {rowData.status ===
-                    'paid'
-                        ? 'text-emerald-700'
-                        : rowData.status === 'overdue'
-                          ? 'text-red-700'
-                          : rowData.status === 'draft'
-                            ? 'text-slate-600'
-                            : 'text-blue-700'}"
-                >
-                    <svg
-                        class="h-3 w-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        ><path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M19 9l-7 7-7-7"
-                        ></path></svg
-                    >
-                </div>
-            </div>
+            <StatusBadge status={rowData.status} />
         </td>
         <td
             class="px-5 py-4 whitespace-nowrap text-sm font-bold text-slate-900 text-right"

@@ -29,4 +29,7 @@ export interface Invoice {
     currency: string; // e.g., "USD"
     notes: string;
     terms: string;
+    sentAt?: Date;
+    viewedAt?: Date;
+    paidAt?: Date;
 }
