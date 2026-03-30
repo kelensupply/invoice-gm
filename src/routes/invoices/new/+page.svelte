@@ -53,5 +53,19 @@
 </div>
 
 <div class="px-8 py-10 max-w-5xl mx-auto">
-    <InvoiceForm type="invoice" onsave={handleSave} />
+    <!-- Wrap in boundary to catch any client side render errors for this specific component that might be crashing the router -->
+    <svelte:boundary>
+        <InvoiceForm type="invoice" onsave={handleSave} />
+        {#snippet failed(error, reset)}
+            <div
+                class="p-4 bg-red-100 border border-red-300 rounded text-red-800"
+            >
+                <h3 class="font-bold">Error rendering New Sale Form</h3>
+                <p>{error.message}</p>
+                <button onclick={reset} class="mt-2 text-red-600 underline"
+                    >Try again</button
+                >
+            </div>
+        {/snippet}
+    </svelte:boundary>
 </div>

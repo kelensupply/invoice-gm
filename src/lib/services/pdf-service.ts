@@ -27,12 +27,21 @@ export const generateInvoicePdf = (invoice: Invoice): jsPDF => {
     };
 
     setDocTextColor(textColor);
-    doc.text(invoice.sender.name, 14, 25);
+    let startY = 25;
+    if (invoice.sender.logo) {
+        try {
+            doc.addImage(invoice.sender.logo, 'PNG', 14, 10, 20, 20);
+            startY = 38;
+        } catch (e) {
+            console.warn('Could not add logo', e);
+        }
+    }
+    doc.text(invoice.sender.name, 14, startY);
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     setDocTextColor(lightTextColor);
-    let senderY = 32;
+    let senderY = startY + 7;
     const addSenderLine = (text: string) => {
         if (text) {
             doc.text(text, 14, senderY);
@@ -218,13 +227,22 @@ export const generateEstimatePdf = (estimate: Estimate): jsPDF => {
     doc.setFontSize(24);
     doc.setFont('helvetica', 'bold');
     setDocTextColor(textColor);
-    doc.text(estimate.sender.name, 14, 25);
+    let startY = 25;
+    if (estimate.sender.logo) {
+        try {
+            doc.addImage(estimate.sender.logo, 'PNG', 14, 10, 20, 20);
+            startY = 38;
+        } catch (e) {
+            console.warn('Could not add logo', e);
+        }
+    }
+    doc.text(estimate.sender.name, 14, startY);
 
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     setDocTextColor(lightTextColor);
-    let senderY = 32;
-    doc.text(estimate.sender.address, 14, senderY); senderY += 4.5;
+    let senderY = startY + 7;
+    if (estimate.sender.address) { doc.text(estimate.sender.address, 14, senderY); senderY += 4.5; }
     if (estimate.sender.email) { doc.text(estimate.sender.email, 14, senderY); senderY += 4.5; }
     if (estimate.sender.phone) { doc.text(estimate.sender.phone, 14, senderY); senderY += 4.5; }
 

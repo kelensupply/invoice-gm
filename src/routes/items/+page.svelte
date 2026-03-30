@@ -14,7 +14,7 @@
     let itemToDelete: Item | null = $state(null);
 
     const columns = [
-        { key: "name", label: "Item Name" },
+        { key: "name", label: "Product Name" },
         { key: "category", label: "Category" },
         { key: "description", label: "Description", hideOnMobile: true },
         { key: "rate", label: "Default Rate", align: "right" as const },
@@ -47,10 +47,13 @@
 </script>
 
 <svelte:head>
-    <title>Items - Invoicer App</title>
+    <title>Products - Invoicer App</title>
 </svelte:head>
 
-<PageHeader title="Items Library" subtitle="Manage your products and services">
+<PageHeader
+    title="Products Library"
+    subtitle="Manage your products and services"
+>
     <AppButton href="/items/new" variant="primary" size="sm">
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -66,18 +69,18 @@
                 d="M12 4.5v15m7.5-7.5h-15"
             />
         </svg>
-        Add Item
+        Add Product
     </AppButton>
 </PageHeader>
 
 <DataTable
     {columns}
     data={tableData}
-    emptyMessage="You haven't added any items yet."
+    emptyMessage="You haven't added any products yet."
 >
     {#snippet emptyStateAction()}
         <AppButton href="/items/new" variant="primary" size="sm" class="mt-4">
-            Add your first item
+            Add your first product
         </AppButton>
     {/snippet}
 
@@ -130,7 +133,7 @@
                         e.stopPropagation();
                         confirmDelete(row);
                     }}
-                    title="Delete item"
+                    title="Delete product"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -154,7 +157,7 @@
 
 <ConfirmDialog
     bind:open={dialogOpen}
-    title="Delete Item"
+    title="Delete Product"
     description={`Are you sure you want to delete ${itemToDelete?.name}?`}
     confirmText="Delete"
     destructive={true}

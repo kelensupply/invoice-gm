@@ -9,6 +9,7 @@ export interface InvoiceItem {
     description: string;
     rate: number;
     quantity: number;
+    unit?: string;
     taxRate?: number; // Per-item tax percentage override
 }
 

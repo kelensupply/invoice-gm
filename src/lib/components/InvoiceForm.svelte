@@ -7,7 +7,8 @@
     import { CURRENCIES } from "$lib/constants/currencies";
 
     import { settings } from "$lib/stores/settings";
-    import { clients } from "$lib/stores/clients";
+    import { clients, addClient } from "$lib/stores/clients";
+    import { items as itemsStore, addItem } from "$lib/stores/items";
     import { invoices } from "$lib/stores/invoices";
     import { estimates } from "$lib/stores/estimates";
     import { taxRates } from "$lib/stores/tax";
@@ -46,7 +47,10 @@
     function getInitialValues() {
         const d = initialData as any;
         return {
-            docNumber: d?.invoiceNumber || d?.estimateNumber || "",
+            docNumber:
+                d?.invoiceNumber ||
+                d?.estimateNumber ||
+                generateDefaultNumber(),
             referenceNumber: d?.poNumber || d?.referenceNumber || "",
             dateIssued: (d?.dateIssued ? new Date(d.dateIssued) : new Date())
                 .toISOString()
@@ -59,7 +63,12 @@
             )
                 .toISOString()
                 .split("T")[0],
-            sender: d?.sender ? { ...d.sender } : { ...$settings.company },
+            sender: d?.sender
+                ? { ...d.sender, logo: d.sender.logo || null }
+                : {
+                      ...$settings.company,
+                      logo: $settings.company.logo || null,
+                  },
             selectedClientId:
                 d?.client?.id || ($clients.length > 0 ? $clients[0].id : ""),
             items: d?.items
@@ -138,6 +147,9 @@
 
     // UI state
     let activeClientTab: "billed" | "shipped" = $state("billed");
+    let isCreatingNewClient = $state(false);
+    let newClientName = $state("");
+    let newClientEmail = $state("");
     let showShippingField = $state(false);
     let showDiscountField = $state(false);
     let showTaxField = $state(false);
@@ -181,14 +193,54 @@
     }
 
     function onSave(status: any = "draft") {
-        const client = $clients.find((c) => c.id === selectedClientId);
+        let client = $clients.find((c) => c.id === selectedClientId);
+
+        if (isCreatingNewClient && newClientName.trim()) {
+            const newId = addClient({
+                companyName: newClientName,
+                contactName: newClientName,
+                email: newClientEmail,
+                phone: "",
+                address: "",
+                website: "",
+                taxId: "",
+                notes: "",
+            });
+            client = {
+                id: newId,
+                companyName: newClientName,
+                contactName: newClientName,
+                email: newClientEmail,
+            } as any;
+            selectedClientId = newId;
+            isCreatingNewClient = false;
+        }
+
         if (!client) return;
+
+        const finalItems = items.filter((i) => i.name.trim() !== "");
+        const sItems = $itemsStore;
+        finalItems.forEach((item) => {
+            const exists = sItems.some(
+                (si) => si.name.toLowerCase() === item.name.toLowerCase(),
+            );
+            if (!exists && item.name) {
+                addItem({
+                    name: item.name,
+                    description: item.description || "",
+                    rate: item.rate || 0,
+                    sku: "",
+                    category: "",
+                    unit: item.unit || "pcs",
+                });
+            }
+        });
 
         const data: any = {
             dateIssued: new Date(dateIssued),
             sender: { ...sender },
             client: { ...client },
-            items: items.filter((i) => i.name.trim() !== ""),
+            items: finalItems,
             taxRate,
             discount,
             shipping,
@@ -287,9 +339,14 @@
                     Ship To
                 </button>
                 <div class="flex-1 text-right">
-                    <AppButton variant="ghost" size="sm" href="/clients/new"
-                        >+ New client</AppButton
+                    <button
+                        type="button"
+                        class="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors uppercase tracking-widest"
+                        onclick={() =>
+                            (isCreatingNewClient = !isCreatingNewClient)}
                     >
+                        {isCreatingNewClient ? "Cancel" : "+ New client"}
+                    </button>
                 </div>
             </div>
 
@@ -307,6 +364,41 @@
                             class="mt-2 inline-block text-sm font-bold text-emerald-600 hover:underline"
                             >Add your first client →</a
                         >
+                    </div>
+                {:else if isCreatingNewClient}
+                    <div
+                        class="mb-4 space-y-3 bg-emerald-50 p-4 rounded-xl border border-emerald-100"
+                    >
+                        <div>
+                            <label
+                                for="newClientName"
+                                class="block text-xs font-semibold text-slate-600 mb-1.5"
+                                >Company / Client Name <span
+                                    class="text-red-500">*</span
+                                ></label
+                            >
+                            <input
+                                id="newClientName"
+                                type="text"
+                                bind:value={newClientName}
+                                placeholder="e.g. Acme Corp"
+                                class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 bg-white"
+                            />
+                        </div>
+                        <div>
+                            <label
+                                for="newClientEmail"
+                                class="block text-xs font-semibold text-slate-600 mb-1.5"
+                                >Email</label
+                            >
+                            <input
+                                id="newClientEmail"
+                                type="email"
+                                bind:value={newClientEmail}
+                                placeholder="client@example.com"
+                                class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-900 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 bg-white"
+                            />
+                        </div>
                     </div>
                 {:else}
                     <div class="relative mb-4">

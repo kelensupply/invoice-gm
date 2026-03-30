@@ -58,6 +58,7 @@ export const addClient = (client: Omit<Client, 'id'>) => {
             }
         });
     }
+    return id;
 };
 
 export const updateClient = (id: string, updates: Partial<Client>) => {

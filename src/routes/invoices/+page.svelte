@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { invoices } from "$lib/stores/invoices";
+    import { invoices, updateInvoice } from "$lib/stores/invoices";
     import DataTable from "$lib/components/DataTable.svelte";
     import StatusBadge from "$lib/components/StatusBadge.svelte";
     import AppButton from "$lib/components/AppButton.svelte";
@@ -8,14 +8,12 @@
     import type { InvoiceStatus } from "$lib/models/invoice";
     import { goto } from "$app/navigation";
 
-    let currentFilter: InvoiceStatus | "all" = $state("all");
+    let currentFilter: string = $state("all");
 
     const filterTabs = [
         { value: "all", label: "All" },
-        { value: "draft", label: "Draft" },
-        { value: "sent", label: "Sent" },
-        { value: "viewed", label: "Viewed" },
         { value: "paid", label: "Paid" },
+        { value: "unpaid", label: "Unpaid" },
         { value: "overdue", label: "Overdue" },
     ];
 
@@ -43,9 +41,12 @@
     ];
 
     let filteredInvoices = $derived(
-        $invoices.filter(
-            (inv) => currentFilter === "all" || inv.status === currentFilter,
-        ),
+        $invoices.filter((inv) => {
+            if (currentFilter === "all") return true;
+            if (currentFilter === "unpaid")
+                return inv.status !== "paid" && inv.status !== "overdue";
+            return inv.status === currentFilter;
+        }),
     );
 
     let tableData = $derived(
@@ -69,7 +70,12 @@
 </svelte:head>
 
 <PageHeader title="Invoices">
-    <AppButton href="/invoices/new" variant="primary" size="sm">
+    <AppButton
+        data-sveltekit-reload
+        href="/invoices/new"
+        variant="primary"
+        size="sm"
+    >
         <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -97,8 +103,7 @@
         >
             {#each filterTabs as tab}
                 <button
-                    onclick={() =>
-                        (currentFilter = tab.value as InvoiceStatus | "all")}
+                    onclick={() => (currentFilter = tab.value)}
                     class="whitespace-nowrap py-3 px-3 border-b-2 font-medium text-sm transition-colors focus:outline-none
                     {currentFilter === tab.value
                         ? 'border-emerald-500 text-emerald-600'
@@ -112,8 +117,10 @@
                             {$invoices.length}
                         </span>
                     {:else}
-                        {@const count = $invoices.filter(
-                            (i) => i.status === tab.value,
+                        {@const count = $invoices.filter((i) =>
+                            tab.value === "unpaid"
+                                ? i.status !== "paid" && i.status !== "overdue"
+                                : i.status === tab.value,
                         ).length}
                         {#if count > 0}
                             <span
@@ -139,6 +146,7 @@
 >
     {#snippet emptyStateAction()}
         <AppButton
+            data-sveltekit-reload
             href="/invoices/new"
             variant="primary"
             size="sm"
@@ -160,7 +168,58 @@
             {rowData.client}
         </td>
         <td class="px-5 py-4 whitespace-nowrap">
-            <StatusBadge status={rowData.status} />
+            <!-- svelte-ignore a11y_click_events_have_key_events -->
+            <!-- svelte-ignore a11y_no_static_element_interactions -->
+            <div
+                class="relative inline-block"
+                onclick={(e) => e.stopPropagation()}
+            >
+                <select
+                    value={rowData.status}
+                    onchange={(e) =>
+                        updateInvoice(rowData.raw.id, {
+                            status: (e.target as HTMLSelectElement)
+                                .value as any,
+                        })}
+                    class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border-2 outline-none appearance-none cursor-pointer pr-6
+                    {rowData.status === 'paid'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200 focus:border-emerald-400'
+                        : rowData.status === 'overdue'
+                          ? 'bg-red-50 text-red-700 border-red-200 focus:border-red-400'
+                          : rowData.status === 'draft'
+                            ? 'bg-slate-50 text-slate-600 border-slate-200 focus:border-slate-400'
+                            : 'bg-blue-50 text-blue-700 border-blue-200 focus:border-blue-400'}"
+                >
+                    <option value="draft">Draft</option>
+                    <option value="sent">Sent</option>
+                    <option value="viewed">Viewed</option>
+                    <option value="paid">Paid</option>
+                    <option value="overdue">Overdue</option>
+                </select>
+                <div
+                    class="pointer-events-none absolute inset-y-0 right-1.5 flex items-center {rowData.status ===
+                    'paid'
+                        ? 'text-emerald-700'
+                        : rowData.status === 'overdue'
+                          ? 'text-red-700'
+                          : rowData.status === 'draft'
+                            ? 'text-slate-600'
+                            : 'text-blue-700'}"
+                >
+                    <svg
+                        class="h-3 w-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        ><path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M19 9l-7 7-7-7"
+                        ></path></svg
+                    >
+                </div>
+            </div>
         </td>
         <td
             class="px-5 py-4 whitespace-nowrap text-sm font-bold text-slate-900 text-right"

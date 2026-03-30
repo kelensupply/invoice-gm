@@ -46,10 +46,10 @@
 </script>
 
 <svelte:head>
-    <title>Expenses - Invoicer App</title>
+    <title>Purchases - Invoicer App</title>
 </svelte:head>
 
-<PageHeader title="Expenses" subtitle="Track your business spending">
+<PageHeader title="Purchases" subtitle="Track your business purchases">
     <AppButton href="/expenses/new" variant="primary" size="sm">
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -65,14 +65,14 @@
                 d="M12 4.5v15m7.5-7.5h-15"
             />
         </svg>
-        Record Expense
+        Record Purchase
     </AppButton>
 </PageHeader>
 
 <DataTable
     {columns}
     data={tableData}
-    emptyMessage="You haven't recorded any expenses yet."
+    emptyMessage="You haven't recorded any purchases yet."
 >
     {#snippet emptyStateAction()}
         <AppButton
@@ -81,7 +81,7 @@
             size="sm"
             class="mt-4"
         >
-            Record your first expense
+            Record your first purchase
         </AppButton>
     {/snippet}
 
@@ -114,7 +114,7 @@
                         e.stopPropagation();
                         confirmDelete(row);
                     }}
-                    title="Delete expense"
+                    title="Delete purchase"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -138,8 +138,8 @@
 
 <ConfirmDialog
     bind:open={dialogOpen}
-    title="Delete Expense"
-    description="Are you sure you want to delete this expense?"
+    title="Delete Purchase"
+    description="Are you sure you want to delete this purchase?"
     confirmText="Delete"
     destructive={true}
     onconfirm={handleDelete}

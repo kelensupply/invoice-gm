@@ -2,7 +2,9 @@
     import { page } from "$app/stores";
     import { onMount, tick } from "svelte";
     import { estimates } from "$lib/stores/estimates";
+    import { addInvoice, invoices } from "$lib/stores/invoices";
     import { documentHistory } from "$lib/stores/history";
+    import { goto } from "$app/navigation";
     import { generateEstimatePdf } from "$lib/services/pdf-service";
     import AppButton from "$lib/components/AppButton.svelte";
     import ShareModal from "$lib/components/ShareModal.svelte";
@@ -62,6 +64,33 @@
         if (!estimate) return;
         const doc = generateEstimatePdf(estimate);
         doc.save(`${estimate.estimateNumber}.pdf`);
+    }
+
+    function handleConvertToInvoice() {
+        if (!estimate) return;
+
+        const nextIdx = $invoices.length + 1;
+        const newInvoiceNumber = `INV-${nextIdx.toString().padStart(3, "0")}`;
+
+        const newInvoiceData = {
+            invoiceNumber: newInvoiceNumber,
+            poNumber: estimate.referenceNumber,
+            dateIssued: new Date(),
+            dateDue: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+            status: "draft",
+            sender: estimate.sender,
+            client: estimate.client,
+            items: estimate.items,
+            taxRate: estimate.taxRate,
+            discount: estimate.discount,
+            shipping: estimate.shipping,
+            currency: estimate.currency,
+            notes: estimate.notes,
+            terms: estimate.terms,
+        };
+
+        const newId = addInvoice(newInvoiceData as any);
+        goto(`/invoices/${newId}/preview`);
     }
 </script>
 
@@ -140,6 +169,29 @@
                 />
             </svg>
             Share
+        </AppButton>
+        <AppButton
+            variant="outline"
+            size="sm"
+            onclick={handleConvertToInvoice}
+            disabled={!estimate}
+            class="whitespace-nowrap flex-shrink-0 text-emerald-600 border-emerald-200 hover:bg-emerald-50"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="2"
+                stroke="currentColor"
+                class="w-4 h-4 mr-1 sm:mr-2"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+                />
+            </svg>
+            Convert to Invoice
         </AppButton>
         <AppButton
             variant="secondary"

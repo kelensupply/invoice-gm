@@ -64,6 +64,7 @@ export const addItem = (item: Omit<Item, 'id'>) => {
             }
         });
     }
+    return id;
 };
 
 export const updateItem = (id: string, updates: Partial<Item>) => {

@@ -45,10 +45,10 @@
 </script>
 
 <svelte:head>
-    <title>Clients - Invoicer App</title>
+    <title>Customers - Invoicer App</title>
 </svelte:head>
 
-<PageHeader title="Clients" subtitle="Manage your client relationships">
+<PageHeader title="Customers" subtitle="Manage your customer relationships">
     <AppButton href="/clients/new" variant="primary" size="sm">
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,7 @@
                 d="M12 4.5v15m7.5-7.5h-15"
             />
         </svg>
-        Add Client
+        Add Customer
     </AppButton>
 </PageHeader>
 
@@ -72,11 +72,11 @@
     {columns}
     data={tableData}
     onRowClick={handleRowClick}
-    emptyMessage="You haven't added any clients yet."
+    emptyMessage="You haven't added any customers yet."
 >
     {#snippet emptyStateAction()}
         <AppButton href="/clients/new" variant="primary" size="sm" class="mt-4">
-            Add your first client
+            Add your first customer
         </AppButton>
     {/snippet}
 
@@ -117,7 +117,7 @@
                         e.stopPropagation();
                         confirmDelete(rowData);
                     }}
-                    title="Delete client"
+                    title="Delete customer"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -141,7 +141,7 @@
 
 <ConfirmDialog
     bind:open={dialogOpen}
-    title="Delete Client"
+    title="Delete Customer"
     description={`Are you sure you want to delete ${clientToDelete?.companyName}? This action cannot be undone.`}
     confirmText="Delete"
     destructive={true}
