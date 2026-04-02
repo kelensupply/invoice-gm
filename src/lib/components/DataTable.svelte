@@ -35,7 +35,9 @@
     }
 
     // Get columns to show on mobile
-    const visibleColumns = columns.filter((col: Column) => !col.hideOnMobile);
+    let visibleColumns = $derived(
+        columns.filter((col: Column) => !col.hideOnMobile),
+    );
 </script>
 
 <div class="section-card">
@@ -119,8 +121,11 @@
         <div class="sm:hidden divide-y divide-slate-200">
             {#each data as row, i}
                 <div
-                    class="p-4 hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer"
+                    role="button"
+                    tabindex="0"
+                    class="p-4 hover:bg-slate-50 active:bg-slate-100 transition-colors cursor-pointer outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500"
                     onclick={() => handleRowClick(row)}
+                    onkeydown={(e) => e.key === "Enter" && handleRowClick(row)}
                 >
                     {#if rowSnippet}
                         <div class="space-y-2">

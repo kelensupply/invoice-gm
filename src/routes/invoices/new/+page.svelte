@@ -61,7 +61,7 @@
                 class="p-4 bg-red-100 border border-red-300 rounded text-red-800"
             >
                 <h3 class="font-bold">Error rendering New Sale Form</h3>
-                <p>{error.message}</p>
+                <p>{(error as any).message || String(error)}</p>
                 <button onclick={reset} class="mt-2 text-red-600 underline"
                     >Try again</button
                 >

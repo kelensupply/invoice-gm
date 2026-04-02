@@ -6,7 +6,12 @@
         shareUrl,
         documentNumber,
         onshare,
-    } = $props();
+    } = $props<{
+        isOpen?: boolean;
+        shareUrl: string;
+        documentNumber: string;
+        onshare?: (method: string) => void;
+    }>();
 
     let copyLabel = $state("Copy Link");
 
