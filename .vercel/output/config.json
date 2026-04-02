@@ -1,0 +1,145 @@
+{
+	"version": 3,
+	"routes": [
+		{
+			"src": ".*",
+			"continue": true,
+			"transforms": [
+				{
+					"type": "request.query",
+					"op": "delete",
+					"target": {
+						"key": "__pathname"
+					}
+				}
+			]
+		},
+		{
+			"src": "/_app/immutable/.+",
+			"headers": {
+				"cache-control": "public, immutable, max-age=31536000"
+			}
+		},
+		{
+			"handle": "filesystem"
+		},
+		{
+			"src": "/_app/immutable/.+",
+			"status": 404,
+			"continue": false
+		},
+		{
+			"src": "^/?(?:/__data.json)?$",
+			"dest": "/"
+		},
+		{
+			"src": "^/api/invoices/([^/]+?)/view/?(?:/__data.json)?$",
+			"dest": "/api/invoices/[id]/view"
+		},
+		{
+			"src": "^/auth/callback/?(?:/__data.json)?$",
+			"dest": "/auth/callback"
+		},
+		{
+			"src": "^/clients/?(?:/__data.json)?$",
+			"dest": "/clients"
+		},
+		{
+			"src": "^/clients/new/?(?:/__data.json)?$",
+			"dest": "/clients/new"
+		},
+		{
+			"src": "^/clients/([^/]+?)/?(?:/__data.json)?$",
+			"dest": "/clients/[id]"
+		},
+		{
+			"src": "^/dashboard/?(?:/__data.json)?$",
+			"dest": "/dashboard"
+		},
+		{
+			"src": "^/estimates/?(?:/__data.json)?$",
+			"dest": "/estimates"
+		},
+		{
+			"src": "^/estimates/new/?(?:/__data.json)?$",
+			"dest": "/estimates/new"
+		},
+		{
+			"src": "^/estimates/([^/]+?)/?(?:/__data.json)?$",
+			"dest": "/estimates/[id]"
+		},
+		{
+			"src": "^/estimates/([^/]+?)/preview/?(?:/__data.json)?$",
+			"dest": "/estimates/[id]/preview"
+		},
+		{
+			"src": "^/expenses/?(?:/__data.json)?$",
+			"dest": "/expenses"
+		},
+		{
+			"src": "^/expenses/new/?(?:/__data.json)?$",
+			"dest": "/expenses/new"
+		},
+		{
+			"src": "^/forgot-password/?(?:/__data.json)?$",
+			"dest": "/forgot-password"
+		},
+		{
+			"src": "^/invoices/?(?:/__data.json)?$",
+			"dest": "/invoices"
+		},
+		{
+			"src": "^/invoices/new/?(?:/__data.json)?$",
+			"dest": "/invoices/new"
+		},
+		{
+			"src": "^/invoices/([^/]+?)/?(?:/__data.json)?$",
+			"dest": "/invoices/[id]"
+		},
+		{
+			"src": "^/invoices/([^/]+?)/preview/?(?:/__data.json)?$",
+			"dest": "/invoices/[id]/preview"
+		},
+		{
+			"src": "^/items/?(?:/__data.json)?$",
+			"dest": "/items"
+		},
+		{
+			"src": "^/items/new/?(?:/__data.json)?$",
+			"dest": "/items/new"
+		},
+		{
+			"src": "^/items/([^/]+?)/?(?:/__data.json)?$",
+			"dest": "/items/[id]"
+		},
+		{
+			"src": "^/login/?(?:/__data.json)?$",
+			"dest": "/login"
+		},
+		{
+			"src": "^/logout/?(?:/__data.json)?$",
+			"dest": "/logout"
+		},
+		{
+			"src": "^/reset-password/?(?:/__data.json)?$",
+			"dest": "/reset-password"
+		},
+		{
+			"src": "^/settings/?(?:/__data.json)?$",
+			"dest": "/settings"
+		},
+		{
+			"src": "^/signup/?(?:/__data.json)?$",
+			"dest": "/signup"
+		},
+		{
+			"src": "^/view/([^/]+?)/?(?:/__data.json)?$",
+			"dest": "/view/[id]"
+		},
+		{
+			"src": "/.*",
+			"dest": "/![-]/catchall"
+		}
+	],
+	"overrides": {}
+}

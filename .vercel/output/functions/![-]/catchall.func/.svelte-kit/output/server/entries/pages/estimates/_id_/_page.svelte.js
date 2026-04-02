@@ -1,0 +1,49 @@
+import { s as store_get, i as head, c as escape_html, d as unsubscribe_stores, g as derived } from "../../../../chunks/index.js";
+import { p as page } from "../../../../chunks/stores.js";
+import { g as goto } from "../../../../chunks/client.js";
+import { e as estimates, u as updateEstimate } from "../../../../chunks/estimates.js";
+import { I as InvoiceForm } from "../../../../chunks/InvoiceForm.js";
+import { A as AppButton } from "../../../../chunks/AppButton.js";
+function _page($$renderer, $$props) {
+  $$renderer.component(($$renderer2) => {
+    var $$store_subs;
+    const estimateId = store_get($$store_subs ??= {}, "$page", page).params.id;
+    const estimate = derived(() => store_get($$store_subs ??= {}, "$estimates", estimates).find((e) => e.id === estimateId));
+    function handleSave(estimateData) {
+      if (!estimateId) return;
+      updateEstimate(estimateId, estimateData);
+      goto();
+    }
+    head("11zqeug", $$renderer2, ($$renderer3) => {
+      $$renderer3.title(($$renderer4) => {
+        $$renderer4.push(`<title>Edit Estimate ${escape_html(estimate()?.estimateNumber || "")} - Invoicer App</title>`);
+      });
+    });
+    $$renderer2.push(`<div class="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200 px-8 py-4 flex items-center justify-between shadow-sm"><div class="flex items-center gap-4"><a href="/estimates" class="group text-slate-500 hover:text-slate-800 flex items-center gap-2 font-medium text-sm transition-all"><div class="p-1 rounded-full group-hover:bg-slate-100 transition-colors"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path></svg></div> Back to Estimates</a> <div class="h-6 w-px bg-slate-300 mx-2"></div> <h1 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-2">Edit Estimate <span class="text-emerald-600">${escape_html(estimate()?.estimateNumber || "")}</span></h1></div></div> <div class="px-8 py-10 max-w-5xl mx-auto">`);
+    if (!estimate()) {
+      $$renderer2.push("<!--[0-->");
+      $$renderer2.push(`<div class="bg-white p-12 rounded-2xl shadow-xl text-center border border-slate-200"><h3 class="text-2xl font-black text-slate-900 mb-2 tracking-tight">Estimate Not Found</h3> <p class="text-slate-500 mb-8">The estimate you're trying to edit doesn't exist.</p> `);
+      AppButton($$renderer2, {
+        variant: "primary",
+        href: "/estimates",
+        children: ($$renderer3) => {
+          $$renderer3.push(`<!---->Return to List`);
+        },
+        $$slots: { default: true }
+      });
+      $$renderer2.push(`<!----></div>`);
+    } else {
+      $$renderer2.push("<!--[-1-->");
+      InvoiceForm($$renderer2, {
+        type: "estimate",
+        initialData: estimate(),
+        onsave: handleSave
+      });
+    }
+    $$renderer2.push(`<!--]--></div>`);
+    if ($$store_subs) unsubscribe_stores($$store_subs);
+  });
+}
+export {
+  _page as default
+};

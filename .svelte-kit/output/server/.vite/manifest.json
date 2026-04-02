@@ -1,0 +1,717 @@
+{
+  ".svelte-kit/generated/server/internal.js": {
+    "file": "internal.js",
+    "name": "internal",
+    "src": ".svelte-kit/generated/server/internal.js",
+    "isEntry": true,
+    "imports": [
+      "_root.js",
+      "_environment.js",
+      "_internal.js"
+    ]
+  },
+  "_AppButton.js": {
+    "file": "chunks/AppButton.js",
+    "name": "AppButton",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_ConfirmDialog.js": {
+    "file": "chunks/ConfirmDialog.js",
+    "name": "ConfirmDialog",
+    "imports": [
+      "_index.js",
+      "_AppButton.js"
+    ]
+  },
+  "_DataTable.js": {
+    "file": "chunks/DataTable.js",
+    "name": "DataTable",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_FileUpload.js": {
+    "file": "chunks/FileUpload.js",
+    "name": "FileUpload",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_InvoiceForm.js": {
+    "file": "chunks/InvoiceForm.js",
+    "name": "InvoiceForm",
+    "imports": [
+      "_index.js",
+      "_AppButton.js",
+      "_currencies.js",
+      "_settings.js",
+      "_clients.js",
+      "_items.js",
+      "_invoices.js",
+      "_estimates.js",
+      "_index2.js",
+      "_formatters.js",
+      "_FileUpload.js"
+    ]
+  },
+  "_PageHeader.js": {
+    "file": "chunks/PageHeader.js",
+    "name": "PageHeader",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_ShareModal.js": {
+    "file": "chunks/ShareModal.js",
+    "name": "ShareModal",
+    "imports": [
+      "_formatters.js",
+      "_index.js",
+      "_AppButton.js"
+    ]
+  },
+  "_StatusBadge.js": {
+    "file": "chunks/StatusBadge.js",
+    "name": "StatusBadge",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_categories.js": {
+    "file": "chunks/categories.js",
+    "name": "categories"
+  },
+  "_client.js": {
+    "file": "chunks/client.js",
+    "name": "client",
+    "imports": [
+      "_exports.js",
+      "_utils2.js",
+      "_index2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ]
+  },
+  "_clients.js": {
+    "file": "chunks/clients.js",
+    "name": "clients",
+    "imports": [
+      "_index2.js"
+    ]
+  },
+  "_countries.js": {
+    "file": "chunks/countries.js",
+    "name": "countries"
+  },
+  "_currencies.js": {
+    "file": "chunks/currencies.js",
+    "name": "currencies"
+  },
+  "_environment.js": {
+    "file": "chunks/environment.js",
+    "name": "environment"
+  },
+  "_estimates.js": {
+    "file": "chunks/estimates.js",
+    "name": "estimates",
+    "imports": [
+      "_index2.js",
+      "_history.js"
+    ]
+  },
+  "_exports.js": {
+    "file": "chunks/exports.js",
+    "name": "exports"
+  },
+  "_formatters.js": {
+    "file": "chunks/formatters.js",
+    "name": "formatters"
+  },
+  "_history.js": {
+    "file": "chunks/history.js",
+    "name": "history",
+    "imports": [
+      "_index2.js"
+    ]
+  },
+  "_index.js": {
+    "file": "chunks/index.js",
+    "name": "index",
+    "imports": [
+      "_utils.js"
+    ]
+  },
+  "_index2.js": {
+    "file": "chunks/index2.js",
+    "name": "index",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_internal.js": {
+    "file": "chunks/internal.js",
+    "name": "internal",
+    "imports": [
+      "_root.js",
+      "_environment.js"
+    ],
+    "dynamicImports": [
+      "src/hooks.server.ts"
+    ]
+  },
+  "_invoices.js": {
+    "file": "chunks/invoices.js",
+    "name": "invoices",
+    "imports": [
+      "_index2.js",
+      "_history.js"
+    ]
+  },
+  "_items.js": {
+    "file": "chunks/items.js",
+    "name": "items",
+    "imports": [
+      "_index2.js"
+    ]
+  },
+  "_public.js": {
+    "file": "chunks/public.js",
+    "name": "public"
+  },
+  "_root.js": {
+    "file": "chunks/root.js",
+    "name": "root",
+    "imports": [
+      "_index.js"
+    ]
+  },
+  "_settings.js": {
+    "file": "chunks/settings.js",
+    "name": "settings",
+    "imports": [
+      "_index2.js"
+    ]
+  },
+  "_shared.js": {
+    "file": "chunks/shared.js",
+    "name": "shared",
+    "imports": [
+      "_utils2.js",
+      "_utils.js"
+    ]
+  },
+  "_state.svelte.js": {
+    "file": "chunks/state.svelte.js",
+    "name": "state.svelte",
+    "imports": [
+      "_index.js",
+      "_exports.js",
+      "_root.js"
+    ]
+  },
+  "_stores.js": {
+    "file": "chunks/stores.js",
+    "name": "stores",
+    "imports": [
+      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ]
+  },
+  "_utils.js": {
+    "file": "chunks/utils.js",
+    "name": "utils"
+  },
+  "_utils2.js": {
+    "file": "chunks/utils2.js",
+    "name": "utils"
+  },
+  "node_modules/.pnpm/@sveltejs+kit@2.55.0_@sveltejs+vite-plugin-svelte@6.2.4_svelte@5.55.1_vite@7.3.1_@types_3bf1b1d11f21f84b94b1d782d753d127/node_modules/@sveltejs/kit/src/runtime/app/server/remote/index.js": {
+    "file": "remote-entry.js",
+    "name": "remote-entry",
+    "src": "node_modules/.pnpm/@sveltejs+kit@2.55.0_@sveltejs+vite-plugin-svelte@6.2.4_svelte@5.55.1_vite@7.3.1_@types_3bf1b1d11f21f84b94b1d782d753d127/node_modules/@sveltejs/kit/src/runtime/app/server/remote/index.js",
+    "isEntry": true,
+    "imports": [
+      "_shared.js",
+      "_utils.js",
+      "_environment.js"
+    ]
+  },
+  "node_modules/.pnpm/@sveltejs+kit@2.55.0_@sveltejs+vite-plugin-svelte@6.2.4_svelte@5.55.1_vite@7.3.1_@types_3bf1b1d11f21f84b94b1d782d753d127/node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte": {
+    "file": "entries/fallbacks/error.svelte.js",
+    "name": "entries/fallbacks/error.svelte",
+    "src": "node_modules/.pnpm/@sveltejs+kit@2.55.0_@sveltejs+vite-plugin-svelte@6.2.4_svelte@5.55.1_vite@7.3.1_@types_3bf1b1d11f21f84b94b1d782d753d127/node_modules/@sveltejs/kit/src/runtime/components/svelte-5/error.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_state.svelte.js",
+      "_client.js"
+    ]
+  },
+  "node_modules/.pnpm/@sveltejs+kit@2.55.0_@sveltejs+vite-plugin-svelte@6.2.4_svelte@5.55.1_vite@7.3.1_@types_3bf1b1d11f21f84b94b1d782d753d127/node_modules/@sveltejs/kit/src/runtime/server/index.js": {
+    "file": "index.js",
+    "name": "index",
+    "src": "node_modules/.pnpm/@sveltejs+kit@2.55.0_@sveltejs+vite-plugin-svelte@6.2.4_svelte@5.55.1_vite@7.3.1_@types_3bf1b1d11f21f84b94b1d782d753d127/node_modules/@sveltejs/kit/src/runtime/server/index.js",
+    "isEntry": true,
+    "imports": [
+      "_utils.js",
+      "_environment.js",
+      "_shared.js",
+      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_index2.js",
+      "_internal.js"
+    ]
+  },
+  "src/hooks.server.ts": {
+    "file": "entries/hooks.server.js",
+    "name": "entries/hooks.server",
+    "src": "src/hooks.server.ts",
+    "isEntry": true,
+    "isDynamicEntry": true,
+    "imports": [
+      "_public.js"
+    ]
+  },
+  "src/routes/+layout.server.ts": {
+    "file": "entries/pages/_layout.server.ts.js",
+    "name": "entries/pages/_layout.server.ts",
+    "src": "src/routes/+layout.server.ts",
+    "isEntry": true,
+    "imports": [
+      "_public.js"
+    ]
+  },
+  "src/routes/+layout.svelte": {
+    "file": "entries/pages/_layout.svelte.js",
+    "name": "entries/pages/_layout.svelte",
+    "src": "src/routes/+layout.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_stores.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_layout.CF-PZoJk.css"
+    ]
+  },
+  "src/routes/+layout.ts": {
+    "file": "entries/pages/_layout.ts.js",
+    "name": "entries/pages/_layout.ts",
+    "src": "src/routes/+layout.ts",
+    "isEntry": true
+  },
+  "src/routes/+page.svelte": {
+    "file": "entries/pages/_page.svelte.js",
+    "name": "entries/pages/_page.svelte",
+    "src": "src/routes/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.CX_vdKUd.css"
+    ]
+  },
+  "src/routes/api/invoices/[id]/view/+server.ts": {
+    "file": "entries/endpoints/api/invoices/_id_/view/_server.ts.js",
+    "name": "entries/endpoints/api/invoices/_id_/view/_server.ts",
+    "src": "src/routes/api/invoices/[id]/view/+server.ts",
+    "isEntry": true
+  },
+  "src/routes/auth/callback/+server.ts": {
+    "file": "entries/endpoints/auth/callback/_server.ts.js",
+    "name": "entries/endpoints/auth/callback/_server.ts",
+    "src": "src/routes/auth/callback/+server.ts",
+    "isEntry": true
+  },
+  "src/routes/clients/+page.svelte": {
+    "file": "entries/pages/clients/_page.svelte.js",
+    "name": "entries/pages/clients/_page.svelte",
+    "src": "src/routes/clients/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_clients.js",
+      "_DataTable.js",
+      "_AppButton.js",
+      "_PageHeader.js",
+      "_ConfirmDialog.js",
+      "_client.js"
+    ]
+  },
+  "src/routes/clients/[id]/+page.svelte": {
+    "file": "entries/pages/clients/_id_/_page.svelte.js",
+    "name": "entries/pages/clients/_id_/_page.svelte",
+    "src": "src/routes/clients/[id]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_stores.js",
+      "_client.js",
+      "_clients.js",
+      "_AppButton.js",
+      "_countries.js"
+    ]
+  },
+  "src/routes/clients/new/+page.svelte": {
+    "file": "entries/pages/clients/new/_page.svelte.js",
+    "name": "entries/pages/clients/new/_page.svelte",
+    "src": "src/routes/clients/new/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_client.js",
+      "_AppButton.js",
+      "_countries.js"
+    ]
+  },
+  "src/routes/dashboard/+page.svelte": {
+    "file": "entries/pages/dashboard/_page.svelte.js",
+    "name": "entries/pages/dashboard/_page.svelte",
+    "src": "src/routes/dashboard/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_invoices.js",
+      "_settings.js",
+      "_estimates.js",
+      "_StatusBadge.js",
+      "_AppButton.js",
+      "_PageHeader.js",
+      "_formatters.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ]
+  },
+  "src/routes/estimates/+page.svelte": {
+    "file": "entries/pages/estimates/_page.svelte.js",
+    "name": "entries/pages/estimates/_page.svelte",
+    "src": "src/routes/estimates/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_estimates.js",
+      "_DataTable.js",
+      "_StatusBadge.js",
+      "_AppButton.js",
+      "_PageHeader.js",
+      "_formatters.js",
+      "_client.js"
+    ]
+  },
+  "src/routes/estimates/[id]/+page.svelte": {
+    "file": "entries/pages/estimates/_id_/_page.svelte.js",
+    "name": "entries/pages/estimates/_id_/_page.svelte",
+    "src": "src/routes/estimates/[id]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_stores.js",
+      "_client.js",
+      "_estimates.js",
+      "_InvoiceForm.js",
+      "_AppButton.js"
+    ]
+  },
+  "src/routes/estimates/[id]/preview/+page.svelte": {
+    "file": "entries/pages/estimates/_id_/preview/_page.svelte.js",
+    "name": "entries/pages/estimates/_id_/preview/_page.svelte",
+    "src": "src/routes/estimates/[id]/preview/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_stores.js",
+      "_estimates.js",
+      "_invoices.js",
+      "_history.js",
+      "_client.js",
+      "_ShareModal.js",
+      "_AppButton.js",
+      "_formatters.js"
+    ]
+  },
+  "src/routes/estimates/new/+page.svelte": {
+    "file": "entries/pages/estimates/new/_page.svelte.js",
+    "name": "entries/pages/estimates/new/_page.svelte",
+    "src": "src/routes/estimates/new/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_client.js",
+      "_estimates.js",
+      "_InvoiceForm.js"
+    ]
+  },
+  "src/routes/expenses/+page.svelte": {
+    "file": "entries/pages/expenses/_page.svelte.js",
+    "name": "entries/pages/expenses/_page.svelte",
+    "src": "src/routes/expenses/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js",
+      "_index2.js",
+      "_settings.js",
+      "_formatters.js",
+      "_DataTable.js",
+      "_AppButton.js",
+      "_PageHeader.js",
+      "_ConfirmDialog.js"
+    ]
+  },
+  "src/routes/expenses/new/+page.svelte": {
+    "file": "entries/pages/expenses/new/_page.svelte.js",
+    "name": "entries/pages/expenses/new/_page.svelte",
+    "src": "src/routes/expenses/new/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_client.js",
+      "_categories.js",
+      "_settings.js",
+      "_currencies.js",
+      "_AppButton.js",
+      "_FileUpload.js"
+    ]
+  },
+  "src/routes/forgot-password/+page.server.ts": {
+    "file": "entries/pages/forgot-password/_page.server.ts.js",
+    "name": "entries/pages/forgot-password/_page.server.ts",
+    "src": "src/routes/forgot-password/+page.server.ts",
+    "isEntry": true
+  },
+  "src/routes/forgot-password/+page.svelte": {
+    "file": "entries/pages/forgot-password/_page.svelte.js",
+    "name": "entries/pages/forgot-password/_page.svelte",
+    "src": "src/routes/forgot-password/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ]
+  },
+  "src/routes/invoices/+page.svelte": {
+    "file": "entries/pages/invoices/_page.svelte.js",
+    "name": "entries/pages/invoices/_page.svelte",
+    "src": "src/routes/invoices/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_invoices.js",
+      "_DataTable.js",
+      "_StatusBadge.js",
+      "_AppButton.js",
+      "_PageHeader.js",
+      "_formatters.js",
+      "_client.js"
+    ]
+  },
+  "src/routes/invoices/[id]/+page.svelte": {
+    "file": "entries/pages/invoices/_id_/_page.svelte.js",
+    "name": "entries/pages/invoices/_id_/_page.svelte",
+    "src": "src/routes/invoices/[id]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_stores.js",
+      "_client.js",
+      "_invoices.js",
+      "_InvoiceForm.js",
+      "_AppButton.js"
+    ]
+  },
+  "src/routes/invoices/[id]/preview/+page.svelte": {
+    "file": "entries/pages/invoices/_id_/preview/_page.svelte.js",
+    "name": "entries/pages/invoices/_id_/preview/_page.svelte",
+    "src": "src/routes/invoices/[id]/preview/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_stores.js",
+      "_invoices.js",
+      "_index2.js",
+      "_history.js",
+      "_ShareModal.js",
+      "_AppButton.js",
+      "_formatters.js"
+    ]
+  },
+  "src/routes/invoices/new/+page.svelte": {
+    "file": "entries/pages/invoices/new/_page.svelte.js",
+    "name": "entries/pages/invoices/new/_page.svelte",
+    "src": "src/routes/invoices/new/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_client.js",
+      "_invoices.js",
+      "_InvoiceForm.js"
+    ]
+  },
+  "src/routes/items/+page.svelte": {
+    "file": "entries/pages/items/_page.svelte.js",
+    "name": "entries/pages/items/_page.svelte",
+    "src": "src/routes/items/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_client.js",
+      "_items.js",
+      "_categories.js",
+      "_settings.js",
+      "_formatters.js",
+      "_DataTable.js",
+      "_AppButton.js",
+      "_PageHeader.js",
+      "_ConfirmDialog.js"
+    ]
+  },
+  "src/routes/items/[id]/+page.svelte": {
+    "file": "entries/pages/items/_id_/_page.svelte.js",
+    "name": "entries/pages/items/_id_/_page.svelte",
+    "src": "src/routes/items/[id]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js",
+      "_ConfirmDialog.js"
+    ]
+  },
+  "src/routes/items/new/+page.svelte": {
+    "file": "entries/pages/items/new/_page.svelte.js",
+    "name": "entries/pages/items/new/_page.svelte",
+    "src": "src/routes/items/new/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_client.js",
+      "_categories.js",
+      "_settings.js",
+      "_currencies.js",
+      "_AppButton.js"
+    ]
+  },
+  "src/routes/login/+page.server.ts": {
+    "file": "entries/pages/login/_page.server.ts.js",
+    "name": "entries/pages/login/_page.server.ts",
+    "src": "src/routes/login/+page.server.ts",
+    "isEntry": true
+  },
+  "src/routes/login/+page.svelte": {
+    "file": "entries/pages/login/_page.svelte.js",
+    "name": "entries/pages/login/_page.svelte",
+    "src": "src/routes/login/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js",
+      "_stores.js"
+    ]
+  },
+  "src/routes/logout/+page.server.ts": {
+    "file": "entries/pages/logout/_page.server.ts.js",
+    "name": "entries/pages/logout/_page.server.ts",
+    "src": "src/routes/logout/+page.server.ts",
+    "isEntry": true
+  },
+  "src/routes/logout/+page.svelte": {
+    "file": "entries/pages/logout/_page.svelte.js",
+    "name": "entries/pages/logout/_page.svelte",
+    "src": "src/routes/logout/+page.svelte",
+    "isEntry": true
+  },
+  "src/routes/reset-password/+page.server.ts": {
+    "file": "entries/pages/reset-password/_page.server.ts.js",
+    "name": "entries/pages/reset-password/_page.server.ts",
+    "src": "src/routes/reset-password/+page.server.ts",
+    "isEntry": true
+  },
+  "src/routes/reset-password/+page.svelte": {
+    "file": "entries/pages/reset-password/_page.svelte.js",
+    "name": "entries/pages/reset-password/_page.svelte",
+    "src": "src/routes/reset-password/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ]
+  },
+  "src/routes/settings/+page.svelte": {
+    "file": "entries/pages/settings/_page.svelte.js",
+    "name": "entries/pages/settings/_page.svelte",
+    "src": "src/routes/settings/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_settings.js",
+      "_AppButton.js",
+      "_FileUpload.js",
+      "_PageHeader.js"
+    ]
+  },
+  "src/routes/signup/+page.server.ts": {
+    "file": "entries/pages/signup/_page.server.ts.js",
+    "name": "entries/pages/signup/_page.server.ts",
+    "src": "src/routes/signup/+page.server.ts",
+    "isEntry": true
+  },
+  "src/routes/signup/+page.svelte": {
+    "file": "entries/pages/signup/_page.svelte.js",
+    "name": "entries/pages/signup/_page.svelte",
+    "src": "src/routes/signup/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_exports.js",
+      "_utils2.js",
+      "_root.js",
+      "_state.svelte.js"
+    ]
+  },
+  "src/routes/view/[id]/+page.svelte": {
+    "file": "entries/pages/view/_id_/_page.svelte.js",
+    "name": "entries/pages/view/_id_/_page.svelte",
+    "src": "src/routes/view/[id]/+page.svelte",
+    "isEntry": true,
+    "imports": [
+      "_index.js",
+      "_formatters.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.B8l8SGB_.css"
+    ]
+  },
+  "src/routes/view/[id]/+page.ts": {
+    "file": "entries/pages/view/_id_/_page.ts.js",
+    "name": "entries/pages/view/_id_/_page.ts",
+    "src": "src/routes/view/[id]/+page.ts",
+    "isEntry": true
+  }
+}
